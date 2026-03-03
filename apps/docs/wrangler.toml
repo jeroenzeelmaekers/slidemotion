@@ -1,5 +1,8 @@
-[pages]
-build_output_dir = "./dist"
+name = "slidemotion-docs"
+compatibility_date = "2025-01-01"
 
-[pages.build]
+[assets]
+directory = "./dist"
+
+[build]
 command = "bun install --cwd ../.. && bun run build"
