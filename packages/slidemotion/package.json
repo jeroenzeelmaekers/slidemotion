@@ -4,6 +4,25 @@
   "type": "module",
   "description": "A React framework for building animated slide decks in JSX, optimized for presenting code",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeroenzeelmaekers/slidemotion.git",
+    "directory": "packages/slidemotion"
+  },
+  "homepage": "https://github.com/jeroenzeelmaekers/slidemotion#readme",
+  "bugs": {
+    "url": "https://github.com/jeroenzeelmaekers/slidemotion/issues"
+  },
+  "keywords": [
+    "react",
+    "slides",
+    "presentation",
+    "animation",
+    "code",
+    "shiki",
+    "jsx",
+    "deck"
+  ],
   "sideEffects": [
     "*.css"
   ],
