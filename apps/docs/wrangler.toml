@@ -1,0 +1,5 @@
+[pages]
+build_output_dir = "./dist"
+
+[pages.build]
+command = "bun install --cwd ../.. && bun run build"
