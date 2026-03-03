@@ -1,0 +1,30 @@
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@import "shiki-magic-move/dist/style.css";
+@import "tailwindcss";
+@import "slidemotion/styles.css";
+
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+}
+
+/* Line number styling for shiki-magic-move */
+.shiki-magic-move-line-number {
+  opacity: 0.35;
+  width: 2.5em;
+  text-align: right;
+  margin-right: 1.5em;
+  padding-right: 1em;
+}
+
+/* Full-height divider between line numbers and code */
+.shiki-magic-move-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(2.5em + 1em);
+  width: 1px;
+  background: var(--sm-border);
+}
