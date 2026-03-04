@@ -8,6 +8,8 @@
  * Override any token in your own CSS to customize the theme.
  */
 
+@import "shiki-magic-move/dist/style.css";
+
 /* ------------------------------------------------------------------ */
 /* Dark variant (class-based, same pattern as shadcn)                 */
 /* ------------------------------------------------------------------ */
