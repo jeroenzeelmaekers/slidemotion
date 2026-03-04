@@ -1,4 +1,4 @@
-import type { ThemeRegistrationRaw } from "shiki";
+import type { ThemeRegistrationRaw } from "slidemotion/code";
 
 /**
  * Light-mode port of the Orange Juice VSCode theme.
@@ -10,7 +10,7 @@ export const orangeJuiceLight: ThemeRegistrationRaw = {
   name: "orange-juice-light",
   type: "light",
   colors: {
-    "editor.background": "#FAFAF8",
+    "editor.background": "transparent",
     "editor.foreground": "#3B3B3B",
     "editor.lineHighlightBackground": "#F0EDE8",
     "editor.selectionBackground": "#EEDDC4",

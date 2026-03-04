@@ -1,4 +1,4 @@
-import type { ThemeRegistrationRaw } from "shiki";
+import type { ThemeRegistrationRaw } from "slidemotion/code";
 
 /**
  * Dark-mode port of the Orange Juice VSCode theme.

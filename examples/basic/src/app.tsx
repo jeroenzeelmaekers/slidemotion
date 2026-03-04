@@ -1,5 +1,5 @@
 import { Presentation, Presenter } from "slidemotion";
-import { exampleTheme } from "./themes/dark.js";
+import { orangeTheme } from "./themes/orange.js";
 import { IntroSlide } from "./slides/intro.js";
 import { StepsSlide } from "./slides/steps.js";
 import { CodeMorphSlide } from "./slides/code-morph.js";
@@ -9,7 +9,7 @@ import { SlideTransitionSlide } from "./slides/slide-transition.js";
 
 export function App() {
   return (
-    <Presentation theme={exampleTheme}>
+    <Presentation theme={orangeTheme}>
       <Presenter>
         <IntroSlide />
         <StepsSlide />

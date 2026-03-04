@@ -1,4 +1,5 @@
 import { Slide, Code } from "slidemotion";
+import { orangeJuiceLight } from "../themes/orange-juice-light.js";
 
 const codeSteps = [
   `function greet(name: string) {
@@ -19,8 +20,10 @@ export function CodeMorphSlide() {
     <Slide id="code-morph" className="flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center gap-6 p-16">
         <h2 className="text-4xl font-semibold">Code morphing</h2>
-        <p className="text-xl text-sm-muted-foreground">tokens animate between code states</p>
-        <div className="w-full max-w-250 h-175 rounded-xl overflow-hidden bg-sm-surface shadow-2xl shadow-black/10 border border-sm-border flex flex-col">
+        <p className="text-xl text-sm-muted-foreground">
+          tokens animate between code states
+        </p>
+        <div className="w-full max-w-250 h-175 rounded-xl overflow-hidden bg-sm-surface shadow-xl shadow-black/8 border border-sm-border flex flex-col">
           {/* Breadcrumb bar */}
           <div className="flex items-center gap-2 px-6 py-4 border-b border-sm-border">
             <span className="font-mono text-lg text-sm-muted-foreground">
@@ -30,6 +33,7 @@ export function CodeMorphSlide() {
           </div>
           <Code
             lang="typescript"
+            theme={orangeJuiceLight}
             steps={codeSteps}
             lineNumbers
             animationDuration={600}

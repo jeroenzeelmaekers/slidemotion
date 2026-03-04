@@ -22,7 +22,7 @@ export function TerminalSlide() {
             title="Install React"
             steps={terminalSteps}
             typingSpeed={30}
-            className="rounded-xl overflow-hidden text-3xl leading-relaxed bg-sm-surface text-sm-surface-foreground shadow-2xl shadow-black/10 border border-sm-border font-mono"
+            className="rounded-xl overflow-hidden text-3xl leading-relaxed bg-sm-surface text-sm-surface-foreground shadow-xl shadow-black/8 border border-sm-border font-mono"
             classNames={{
               chrome:
                 "flex items-center gap-2 px-3 py-2 bg-sm-muted border-b border-sm-border",
