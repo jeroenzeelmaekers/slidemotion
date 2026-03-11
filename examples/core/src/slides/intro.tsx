@@ -1,8 +1,11 @@
-import { Slide, Step, FadeIn } from "slidemotion";
+import { FadeIn, Slide, SpeakerNotes, Step } from "slidemotion";
 
 export function IntroSlide() {
   return (
     <Slide id="intro" className="flex flex-col">
+      <SpeakerNotes>
+        Open with the mental model: Presentation owns state, Presenter owns runtime shell, Slide and Step own choreography.
+      </SpeakerNotes>
       <div className="flex-1 flex flex-col items-center justify-center gap-6">
         <h1 className="text-7xl font-bold tracking-tight">slidemotion</h1>
         <Step order={1}>
@@ -15,7 +18,7 @@ export function IntroSlide() {
         <Step order={2}>
           <FadeIn>
             <p className="text-xl text-sm-muted-foreground">
-              press <kbd className="px-2 py-0.5 border border-sm-border rounded font-mono text-sm-primary">→</kbd> to continue
+              press <kbd className="px-2 py-0.5 border border-sm-border rounded font-mono text-sm-primary">-&gt;</kbd> to continue
             </p>
           </FadeIn>
         </Step>

@@ -1,11 +1,5 @@
 import type { ThemeRegistrationRaw } from "slidemotion/code";
 
-/**
- * Light-mode port of the Orange Juice VSCode theme.
- *
- * Original: https://github.com/flaviodelgrosso/vscode-orange-juice-theme
- * Palette adapted for light backgrounds while preserving the orange accent identity.
- */
 export const orangeJuiceLight: ThemeRegistrationRaw = {
   name: "orange-juice-light",
   type: "light",

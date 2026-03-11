@@ -1,4 +1,4 @@
-import { Slide, Step, FadeIn, SlideIn, ScaleIn, Stagger } from "slidemotion";
+import { FadeIn, ScaleIn, Slide, SlideIn, Stagger, Step } from "slidemotion";
 
 export function StepsSlide() {
   return (
@@ -9,29 +9,25 @@ export function StepsSlide() {
         <Step order={1}>
           <FadeIn>
             <p className="text-2xl text-sm-muted-foreground">
-              Each step reveals on next →
+              Each step reveals on next -&gt;
             </p>
           </FadeIn>
         </Step>
 
         <Step order={2}>
-          <SlideIn from="left">
-            <p className="text-2xl text-sm-primary">
-              ← slid in from the left
-            </p>
+          <SlideIn from="left" exitTo="right">
+            <p className="text-2xl text-sm-primary">&lt;- slid in from the left</p>
           </SlideIn>
         </Step>
 
-        <Step order={3}>
-          <ScaleIn>
-            <p className="text-2xl text-sm-primary">
-              scaled in from 0.8
-            </p>
+        <Step order={3} duration={650}>
+          <ScaleIn exitTo={0.65}>
+            <p className="text-2xl text-sm-primary">scaled in from 0.8</p>
           </ScaleIn>
         </Step>
 
         <Step order={4}>
-          <Stagger>
+          <Stagger interval={0.16} y={18}>
             <p className="text-xl">staggered item 1</p>
             <p className="text-xl">staggered item 2</p>
             <p className="text-xl">staggered item 3</p>

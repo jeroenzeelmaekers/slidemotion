@@ -1,11 +1,5 @@
-import { defaultTheme, mergeTheme, defineTheme } from "slidemotion";
+import { defaultTheme, defineTheme, mergeTheme } from "slidemotion";
 
-/**
- * Orange Juice layout theme — extends `defaultTheme` with polished controls.
- *
- * Colors are driven by --sm-* CSS custom properties overridden in app.css
- * to match the Orange Juice palette.
- */
 export const orangeTheme = mergeTheme(
   defaultTheme,
   defineTheme({
