@@ -13,6 +13,8 @@ export type SlideInProps = {
   readonly from?: "left" | "right" | "top" | "bottom";
   /** Distance in pixels. Default: 40. */
   readonly distance?: number;
+  /** Direction used when exiting backward. Defaults to `from`. */
+  readonly exitTo?: "left" | "right" | "top" | "bottom";
   readonly style?: CSSProperties;
   readonly className?: string;
 };
@@ -21,15 +23,22 @@ export function SlideIn({
   children,
   from = "left",
   distance = 40,
+  exitTo = from,
   style,
   className,
 }: SlideInProps) {
   const themeSlot = useComponentTheme("SlideIn");
   const resolvedClassName = mergeClassName(themeSlot?.className, className);
   const enter = directionToOffset(from, distance);
+  const exit = directionToOffset(exitTo, distance);
 
   return (
-    <Animate enter={{ opacity: 0, ...enter }} style={style} className={resolvedClassName}>
+    <Animate
+      enter={{ opacity: 0, ...enter }}
+      exit={{ opacity: 0, ...exit }}
+      style={style}
+      className={resolvedClassName}
+    >
       {children}
     </Animate>
   );

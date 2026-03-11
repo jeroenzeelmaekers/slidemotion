@@ -1,11 +1,9 @@
 import {
   Children,
-  cloneElement,
   isValidElement,
   useContext,
-  type CSSProperties,
-  type ReactElement,
   type ReactNode,
+  type ReactElement,
 } from "react";
 import { StepContext, PresentationContext } from "../../core/context.js";
 import { interpolate } from "../../animation/interpolate.js";
@@ -18,11 +16,13 @@ import { interpolate } from "../../animation/interpolate.js";
 
 export type StaggerProps = {
   readonly children: ReactNode;
-  /** Delay between each child in ms. Default: 80. */
+  /** Portion of the progress reserved between each child. Default: 0.12. */
   readonly interval?: number;
+  /** Initial offset in pixels. Default: 10. */
+  readonly y?: number;
 };
 
-export function Stagger({ children, interval = 80 }: StaggerProps) {
+export function Stagger({ children, interval = 0.12, y = 10 }: StaggerProps) {
   const progress = useProgress();
   const childArray = Children.toArray(children).filter(isValidElement);
   const count = childArray.length;
@@ -38,11 +38,10 @@ export function Stagger({ children, interval = 80 }: StaggerProps) {
         // Child 0: starts at 0
         // Child 1: starts at offset
         // etc.
-        const staggerFraction = count > 1 ? i / (count - 1) : 0;
-        // Map: child starts when progress reaches staggerFraction * 0.5
-        // and completes when progress reaches staggerFraction * 0.5 + 0.5
-        const start = staggerFraction * 0.5;
-        const end = start + 0.5;
+        const totalOffset = Math.max(0, Math.min(interval, 1)) * Math.max(count - 1, 0);
+        const available = Math.max(1 - totalOffset, 0.0001);
+        const start = Math.min(i * interval, 1);
+        const end = Math.min(start + available, 1);
         const childProgress = interpolate(
           progress,
           [start, end],
@@ -51,7 +50,7 @@ export function Stagger({ children, interval = 80 }: StaggerProps) {
         );
 
         return (
-          <StaggeredChild key={i} progress={childProgress}>
+          <StaggeredChild key={getChildKey(child, i)} progress={childProgress} y={y}>
             {child}
           </StaggeredChild>
         );
@@ -60,18 +59,24 @@ export function Stagger({ children, interval = 80 }: StaggerProps) {
   );
 }
 
+function getChildKey(child: ReactElement, index: number): string {
+  return child.key === null ? `stagger-${index}` : String(child.key);
+}
+
 function StaggeredChild({
   children,
   progress,
+  y,
 }: {
   children: ReactNode;
   progress: number;
+  y: number;
 }) {
   return (
     <div
       style={{
         opacity: progress,
-        transform: `translateY(${interpolate(progress, [0, 1], [10, 0])}px)`,
+        transform: `translateY(${interpolate(progress, [0, 1], [y, 0])}px)`,
       }}
     >
       {children}
@@ -81,9 +86,9 @@ function StaggeredChild({
 
 function useProgress(): number {
   const stepCtx = useContext(StepContext);
+  const presCtx = useContext(PresentationContext);
   if (stepCtx) return stepCtx.progress;
 
-  const presCtx = useContext(PresentationContext);
   if (presCtx) return presCtx.state.stepProgress;
 
   return 1;

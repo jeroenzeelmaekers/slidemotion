@@ -6,12 +6,18 @@
     "examples/*"
   ],
   "scripts": {
-    "dev": "bun run --filter example-basic dev",
+    "dev": "bun run --filter example-core dev",
+    "dev:core": "bun run --filter example-core dev",
+    "dev:code": "bun run --filter example-code dev",
+    "dev:terminal": "bun run --filter example-terminal dev",
+    "dev:landing": "bun run --filter landing dev",
     "dev:docs": "bun run --filter docs dev",
     "build": "bun run --filter slidemotion build",
+    "build:landing": "bun run --filter landing build",
     "build:docs": "bun run --filter docs build",
+    "preview:landing": "bun run --filter landing preview",
     "test": "bun run --filter slidemotion test",
     "test:watch": "bun run --filter slidemotion test:watch",
-    "typecheck": "bun run --filter slidemotion typecheck"
+    "typecheck": "bun run --filter slidemotion typecheck && bun run --filter landing typecheck"
   }
 }

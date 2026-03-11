@@ -9,7 +9,12 @@ import { useSyncExternalStore } from "react";
 import type { PresentationConfig, PresentationAction, SlideTransition } from "../core/types.js";
 import { createInitialState, presentationReducer, resolveSlideTransitionDuration } from "../core/engine.js";
 import { createStepRegistry, type StepRegistry } from "../core/step-registry.js";
-import { PresentationContext, type PresentationContextValue, type SlideTransitionRegistry, type SlideIndexCounter } from "../core/context.js";
+import {
+  PresentationContext,
+  type PresentationContextValue,
+  type SlideTransitionRegistry,
+  type SpeakerNotesRegistry,
+} from "../core/context.js";
 import {
   createAnimationLoop,
   tweenMode,
@@ -17,6 +22,7 @@ import {
 import { linear } from "../animation/easing.js";
 import type { Theme } from "../theme/types.js";
 import { ThemeProvider } from "../theme/context.js";
+import { defaultTheme } from "../theme/presets.js";
 
 // ---------------------------------------------------------------------------
 // <Presentation>
@@ -27,11 +33,13 @@ import { ThemeProvider } from "../theme/context.js";
 export type PresentationProps = {
   readonly children: ReactNode;
   /** Theme providing CSS variables and default classNames for all components. */
-  readonly theme?: Theme | undefined;
+  readonly theme?: Theme | false | undefined;
   readonly width?: number;
   readonly height?: number;
   /** Default step animation duration in ms. Default: 300 */
   readonly defaultStepDuration?: number;
+  /** Default slide transition. Individual slides can override it. */
+  readonly defaultSlideTransition?: SlideTransition;
 };
 
 export function Presentation({
@@ -40,10 +48,11 @@ export function Presentation({
   width = 1920,
   height = 1080,
   defaultStepDuration = 300,
+  defaultSlideTransition = "none",
 }: PresentationProps) {
   const config: PresentationConfig = useMemo(
-    () => ({ width, height, defaultStepDuration }),
-    [width, height, defaultStepDuration],
+    () => ({ width, height, defaultStepDuration, defaultSlideTransition }),
+    [width, height, defaultStepDuration, defaultSlideTransition],
   );
 
   // -- Step registry (stable across renders) --
@@ -59,15 +68,31 @@ export function Presentation({
     register: (slideIndex: number, transition: SlideTransition) => {
       slideTransitionsRef.current.set(slideIndex, transition);
     },
-    get: (slideIndex: number): SlideTransition => {
-      return slideTransitionsRef.current.get(slideIndex) ?? "none";
+    unregister: (slideIndex: number) => {
+      slideTransitionsRef.current.delete(slideIndex);
     },
-  }), []);
+    get: (slideIndex: number): SlideTransition => {
+      return slideTransitionsRef.current.get(slideIndex) ?? config.defaultSlideTransition;
+    },
+  }), [config.defaultSlideTransition]);
 
   const getSlideTransition = useCallback(
     (slideIndex: number) => slideTransitionRegistry.get(slideIndex),
     [slideTransitionRegistry],
   );
+
+  const speakerNotesRef = useRef(new Map<number, ReactNode>());
+  const speakerNotesRegistry: SpeakerNotesRegistry = useMemo(() => ({
+    register: (slideIndex: number, notes: ReactNode) => {
+      speakerNotesRef.current.set(slideIndex, notes);
+    },
+    unregister: (slideIndex: number) => {
+      speakerNotesRef.current.delete(slideIndex);
+    },
+    get: (slideIndex: number) => {
+      return speakerNotesRef.current.get(slideIndex) ?? null;
+    },
+  }), []);
 
   // -- State management --
   const stateRef = useRef(createInitialState(config));
@@ -84,6 +109,17 @@ export function Presentation({
       }
     }
   }, []);
+
+  useEffect(() => {
+    stateRef.current = {
+      ...stateRef.current,
+      config,
+    };
+    renderRef.current++;
+    for (const cb of forceRenderCallbacks.current) {
+      cb();
+    }
+  }, [config]);
 
   // Subscribe to step registry changes so we re-render when steps register
   useSyncExternalStore(
@@ -161,7 +197,7 @@ export function Presentation({
           });
         }
 
-        const mode = tweenMode(config.defaultStepDuration, linear);
+        const mode = tweenMode(next.activeStepDuration, linear);
         if (next.direction === "forward") {
           stepLoopRef.current.start(mode);
         } else {
@@ -169,7 +205,7 @@ export function Presentation({
         }
       }
     }
-  }, [stepRegistry, config.defaultStepDuration, getSlideTransition]);
+  }, [stepRegistry, getSlideTransition]);
 
   // Force re-render hook using useSyncExternalStore
   const subscribe = useCallback((cb: () => void) => {
@@ -193,8 +229,8 @@ export function Presentation({
 
   // -- Slide index counter (reset each render, read by <Slide>) --
   const slideIndexRef = useRef(0);
-  slideIndexRef.current = 0; // reset every render
-  const slideIndexCounter: SlideIndexCounter = useMemo(() => ({
+  slideIndexRef.current = 0;
+  const slideIndexCounter = useMemo(() => ({
     next: () => slideIndexRef.current++,
     get count() { return slideIndexRef.current; },
   }), []);
@@ -208,9 +244,17 @@ export function Presentation({
       setSlideCount,
       slideTransitionRegistry,
       slideIndexCounter,
+      speakerNotesRegistry,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dispatch, stepRegistry, setSlideCount, slideTransitionRegistry, slideIndexCounter, renderRef.current],
+    [
+      dispatch,
+      stepRegistry,
+      setSlideCount,
+      slideTransitionRegistry,
+      slideIndexCounter,
+      speakerNotesRegistry,
+      renderRef.current,
+    ],
   );
 
   const content = (
@@ -219,7 +263,9 @@ export function Presentation({
     </PresentationContext.Provider>
   );
 
-  return theme
-    ? <ThemeProvider theme={theme}>{content}</ThemeProvider>
-    : content;
+  if (theme === false) {
+    return content;
+  }
+
+  return <ThemeProvider theme={theme ?? defaultTheme}>{content}</ThemeProvider>;
 }

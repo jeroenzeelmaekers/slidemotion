@@ -7,7 +7,7 @@ import { StepContext } from "../core/context.js";
  *
  * @example
  * ```tsx
- * const { order, isActive, isVisible, progress, direction } = useStep();
+ * const { order, isActive, isVisible, progress, direction, status } = useStep();
  * ```
  */
 export function useStep() {

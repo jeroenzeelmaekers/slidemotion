@@ -2,12 +2,17 @@ import {
   useContext,
   useEffect,
   useId,
-  useState,
+  useReducer,
 } from "react";
 import { PresentationContext, SlideContext } from "../core/context.js";
 import type { TerminalProps } from "./types.js";
 import { useComponentTheme } from "../theme/context.js";
 import { mergeClassName, mergeClassNames } from "../theme/merge.js";
+import {
+  countCompletedStepOrders,
+  resolveStepAliases,
+  resolveStepOrders,
+} from "./step-orders.js";
 
 // ---------------------------------------------------------------------------
 // <Terminal>
@@ -21,6 +26,8 @@ export function Terminal({
   steps,
   typingSpeed = 40,
   prompt = "$",
+  atSteps,
+  stepOrders: explicitStepOrders,
   stepOffset,
   className,
   classNames,
@@ -39,26 +46,37 @@ export function Terminal({
   const { stepRegistry, state } = presCtx;
   const { index: slideIndex } = slideCtx;
 
-  const baseOrder = stepOffset ?? 1;
+  const resolvedExplicitStepOrders = resolveStepAliases(
+    atSteps,
+    explicitStepOrders,
+    "Terminal",
+  );
+
+  const stepOrders = resolveStepOrders(
+    steps.length,
+    stepOffset,
+    resolvedExplicitStepOrders,
+    "Terminal",
+  );
 
   // Register steps
   useEffect(() => {
-    for (let i = 0; i < steps.length; i++) {
-      stepRegistry.register(slideIndex, `${instanceId}-term-${i}`, baseOrder + i);
+    for (let i = 0; i < stepOrders.length; i++) {
+      const order = stepOrders[i];
+      if (order !== undefined) {
+        stepRegistry.register(slideIndex, `${instanceId}-term-${i}`, order);
+      }
     }
     return () => {
-      for (let i = 0; i < steps.length; i++) {
+      for (let i = 0; i < stepOrders.length; i++) {
         stepRegistry.unregister(slideIndex, `${instanceId}-term-${i}`);
       }
     };
-  }, [stepRegistry, slideIndex, instanceId, baseOrder, steps.length]);
+  }, [stepRegistry, slideIndex, instanceId, stepOrders]);
 
   // Determine how many terminal steps are visible
   const currentStep = state.currentSlide === slideIndex ? state.currentStep : 0;
-  const visibleStepCount = Math.min(
-    Math.max(0, currentStep - baseOrder + 1),
-    steps.length,
-  );
+  const visibleStepCount = countCompletedStepOrders(currentStep, stepOrders);
 
   return (
     <div className={resolvedClassName}>
@@ -76,7 +94,7 @@ export function Terminal({
       <div className={resolvedClassNames?.body}>
         {steps.slice(0, visibleStepCount).map((step, i) => (
           <TerminalEntry
-            key={i}
+            key={`${step.command}-${step.output ?? ""}`}
             command={step.command}
             output={step.output}
             prompt={prompt}
@@ -115,41 +133,41 @@ function TerminalEntry({
   isLatest: boolean;
   classNames: TerminalProps["classNames"];
 }) {
-  const [typedChars, setTypedChars] = useState(0);
-  const [showOutput, setShowOutput] = useState(false);
+  const [state, dispatch] = useReducer(terminalEntryReducer, {
+    typedChars: isLatest ? 0 : command.length,
+    showOutput: isLatest ? false : output !== undefined,
+  });
 
   // Reset when this entry becomes the latest (just appeared)
   useEffect(() => {
-    if (isLatest) {
-      setTypedChars(0);
-      setShowOutput(false);
-    } else {
-      // Previous entries are fully typed
-      setTypedChars(command.length);
-      setShowOutput(true);
-    }
+    dispatch({
+      type: "syncLatest",
+      isLatest,
+      commandLength: command.length,
+      hasOutput: output !== undefined,
+    });
   }, [isLatest, command.length]);
 
   // Typewriter effect for the command
   useEffect(() => {
-    if (typedChars >= command.length) {
+    if (state.typedChars >= command.length) {
       // Command fully typed → show output after a short delay
-      if (output && !showOutput) {
-        const timer = setTimeout(() => setShowOutput(true), 200);
+      if (output && !state.showOutput) {
+        const timer = setTimeout(() => dispatch({ type: "showOutput" }), 200);
         return () => clearTimeout(timer);
       }
       return;
     }
 
     const timer = setTimeout(() => {
-      setTypedChars((c) => c + 1);
+      dispatch({ type: "tick", commandLength: command.length });
     }, typingSpeed);
 
     return () => clearTimeout(timer);
-  }, [typedChars, command.length, typingSpeed, output, showOutput]);
+  }, [state.typedChars, command.length, typingSpeed, output, state.showOutput]);
 
-  const visibleCommand = command.slice(0, typedChars);
-  const isTyping = typedChars < command.length;
+  const visibleCommand = command.slice(0, state.typedChars);
+  const isTyping = state.typedChars < command.length;
 
   return (
     <div>
@@ -158,13 +176,82 @@ function TerminalEntry({
         <span>{visibleCommand}</span>
         {isTyping && <span className={classNames?.cursor} />}
       </div>
-      {showOutput && output && (
+      {state.showOutput && output && (
         <div className={classNames?.output}>
-          {output.split("\n").map((line, i) => (
-            <div key={i}>{line}</div>
+          {output.split("\n").map((line) => (
+            <div key={line}>{line}</div>
           ))}
         </div>
       )}
     </div>
   );
+}
+
+type TerminalEntryState = {
+  readonly typedChars: number;
+  readonly showOutput: boolean;
+};
+
+type TerminalEntryAction =
+  | {
+      readonly type: "syncLatest";
+      readonly isLatest: boolean;
+      readonly commandLength: number;
+      readonly hasOutput: boolean;
+    }
+  | {
+      readonly type: "tick";
+      readonly commandLength: number;
+    }
+  | { readonly type: "showOutput" };
+
+function terminalEntryReducer(
+  state: TerminalEntryState,
+  action: TerminalEntryAction,
+): TerminalEntryState {
+  switch (action.type) {
+    case "syncLatest": {
+      if (action.isLatest) {
+        if (state.typedChars === 0 && !state.showOutput) {
+          return state;
+        }
+
+        return {
+          typedChars: 0,
+          showOutput: false,
+        };
+      }
+
+      if (state.typedChars === action.commandLength && state.showOutput === action.hasOutput) {
+        return state;
+      }
+
+      return {
+        typedChars: action.commandLength,
+        showOutput: action.hasOutput,
+      };
+    }
+
+    case "tick": {
+      if (state.typedChars >= action.commandLength) {
+        return state;
+      }
+
+      return {
+        ...state,
+        typedChars: state.typedChars + 1,
+      };
+    }
+
+    case "showOutput": {
+      if (state.showOutput) {
+        return state;
+      }
+
+      return {
+        ...state,
+        showOutput: true,
+      };
+    }
+  }
 }

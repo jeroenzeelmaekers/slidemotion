@@ -8,6 +8,8 @@ export type PresentationConfig = {
   readonly height: number;
   /** Default animation duration in ms for step transitions. */
   readonly defaultStepDuration: number;
+  /** Default transition applied to slides unless they override it. */
+  readonly defaultSlideTransition: SlideTransition;
 };
 
 // ---------------------------------------------------------------------------
@@ -109,6 +111,7 @@ export type PresentationState = {
   readonly currentSlide: number;
   readonly currentStep: number;
   readonly stepProgress: number;
+  readonly activeStepDuration: number;
   readonly direction: Direction;
   readonly events: ReadonlyMap<string, EventTriggerState>;
   readonly config: PresentationConfig;
@@ -134,6 +137,7 @@ export type PresentationAction =
   | { readonly type: "toggleEvent"; readonly name: string }
   | { readonly type: "updateEventProgress"; readonly name: string; readonly progress: number }
   | { readonly type: "registerSlideSteps"; readonly slideIndex: number; readonly maxStep: number }
+  | { readonly type: "setStepDuration"; readonly duration: number }
   | { readonly type: "updateSlideTransition"; readonly progress: number }
   | { readonly type: "completeSlideTransition" };
 

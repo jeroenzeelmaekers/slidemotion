@@ -11,6 +11,7 @@ const defaultConfig: PresentationConfig = {
   width: 1920,
   height: 1080,
   defaultStepDuration: 300,
+  defaultSlideTransition: "none",
 };
 
 describe("createInitialState", () => {
@@ -19,6 +20,7 @@ describe("createInitialState", () => {
     expect(state.currentSlide).toBe(0);
     expect(state.currentStep).toBe(0);
     expect(state.stepProgress).toBe(1);
+    expect(state.activeStepDuration).toBe(300);
     expect(state.direction).toBe("forward");
     expect(state.animationStatus).toBe("idle");
     expect(state.previousSlide).toBeNull();
@@ -59,8 +61,18 @@ describe("next action", () => {
     expect(next.currentSlide).toBe(0);
     expect(next.currentStep).toBe(1);
     expect(next.stepProgress).toBe(0);
+    expect(next.activeStepDuration).toBe(300);
     expect(next.animationStatus).toBe("running");
     expect(next.direction).toBe("forward");
+  });
+
+  it("uses step-specific duration when registered", () => {
+    const reg = createStepRegistry();
+    reg.register(0, "a", 1, 650);
+    const state = createInitialState(defaultConfig);
+
+    const next = presentationReducer(state, { type: "next" }, reg, 1);
+    expect(next.activeStepDuration).toBe(650);
   });
 
   it("advances to next slide when at max step (no transition)", () => {

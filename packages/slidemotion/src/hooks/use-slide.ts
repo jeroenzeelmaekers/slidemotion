@@ -7,7 +7,7 @@ import { SlideContext } from "../core/context.js";
  *
  * @example
  * ```tsx
- * const { id, index, isActive } = useSlide();
+ * const { id, index, isActive, transition } = useSlide();
  * ```
  */
 export function useSlide() {

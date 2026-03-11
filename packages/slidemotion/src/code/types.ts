@@ -1,6 +1,18 @@
 import type { CodeAnimationMode, CodeHighlightMap, LineRange } from "../core/types.js";
-import type { HighlighterCore, BundledLanguage, ThemeRegistrationRaw } from "shiki";
-export type { HighlighterCore, BundledLanguage, ThemeRegistrationRaw };
+import type { HighlighterCore, LanguageInput, ThemeRegistrationRaw } from "shiki";
+export type { HighlighterCore, LanguageInput, ThemeRegistrationRaw };
+export type { HighlighterEngine } from "./highlighter-shared.js";
+
+export type CodeRenderer =
+  | {
+      readonly kind: "morph";
+    }
+  | {
+      readonly kind: "static";
+    }
+  | {
+      readonly kind: "tokens";
+    };
 
 // ---------------------------------------------------------------------------
 // <Code> component types
@@ -39,7 +51,7 @@ export type CodeProps = {
   readonly highlighter?: HighlighterCore;
   /** Line highlighting per step. Key = step index, value = line range string. */
   readonly highlight?: CodeHighlightMap;
-  /** Opacity for non-highlighted (dimmed) lines. Default: 0.3 */
+  /** Opacity for non-highlighted (dimmed) lines. Default: 0.6 */
   readonly dimOpacity?: number;
   /** Show line numbers. Default: false */
   readonly lineNumbers?: boolean;
@@ -53,10 +65,19 @@ export type CodeProps = {
   readonly stagger?: number;
   /** Typewriter speed in ms per character. Default: 30 */
   readonly typewriterSpeed?: number;
+  /** Override renderer. Default: built-in morph renderer when available. */
+  readonly renderer?: CodeRenderer | undefined;
+  /** Preferred alias for `stepOrders`. */
+  readonly atSteps?: readonly number[];
   /**
-   * Step offset for auto-registration.
+   * Explicit presentation step order for each code transition.
+   * Deprecated alias in docs. Prefer `atSteps` for new code.
+   */
+  readonly stepOrders?: readonly number[];
+  /**
+   * Shorthand for consecutive code changes.
    * By default, Code auto-registers its steps starting at order 1.
-   * Use this to shift (e.g. stepOffset=3 → code steps are orders 3, 4, 5...).
+   * Prefer `atSteps` when timing needs to stay explicit.
    */
   readonly stepOffset?: number;
   /** CSS class name for the container. */
@@ -108,8 +129,16 @@ export type TerminalProps = {
   readonly typingSpeed?: number;
   /** Prompt character(s). Default: "$" */
   readonly prompt?: string;
+  /** Preferred alias for `stepOrders`. */
+  readonly atSteps?: readonly number[];
   /**
-   * Step offset for auto-registration (same as Code).
+   * Explicit presentation step order for each terminal entry.
+   * Deprecated alias in docs. Prefer `atSteps` for new code.
+   */
+  readonly stepOrders?: readonly number[];
+  /**
+   * Shorthand for consecutive terminal steps.
+   * Prefer `atSteps` when timing needs to stay explicit.
    */
   readonly stepOffset?: number;
   /** CSS class name for the container. */

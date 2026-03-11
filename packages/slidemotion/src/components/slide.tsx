@@ -1,5 +1,10 @@
 import { useContext, useEffect, useMemo, type CSSProperties, type ReactNode } from "react";
-import { PresentationContext, SlideContext, type SlideContextValue } from "../core/context.js";
+import {
+  PresentationContext,
+  SlideContext,
+  SlideRenderIndexContext,
+  type SlideContextValue,
+} from "../core/context.js";
 import type { SlideTransition, SlideTransitionDirection } from "../core/types.js";
 import { useComponentTheme } from "../theme/context.js";
 import { mergeClassName } from "../theme/merge.js";
@@ -19,7 +24,12 @@ export type SlideProps = {
   readonly transition?: SlideTransition | undefined;
 };
 
-export function Slide({ children, id, className, transition = "none" }: SlideProps) {
+export function Slide({
+  children,
+  id,
+  className,
+  transition,
+}: SlideProps) {
   const presCtx = useContext(PresentationContext);
   if (!presCtx) {
     throw new Error("<Slide> must be used within <Presentation>");
@@ -28,21 +38,26 @@ export function Slide({ children, id, className, transition = "none" }: SlidePro
   const themeSlot = useComponentTheme("Slide");
   const resolvedClassName = mergeClassName(themeSlot?.className, className);
 
-  const index = presCtx.slideIndexCounter.next();
+  const renderIndex = useContext(SlideRenderIndexContext);
+  const index = renderIndex ?? presCtx.slideIndexCounter.next();
   const { state, slideTransitionRegistry } = presCtx;
+  const resolvedTransition = transition ?? state.config.defaultSlideTransition;
 
   // Register transition
   useEffect(() => {
-    slideTransitionRegistry.register(index, transition);
-  }, [slideTransitionRegistry, index, transition]);
+    slideTransitionRegistry.register(index, resolvedTransition);
+    return () => {
+      slideTransitionRegistry.unregister(index);
+    };
+  }, [slideTransitionRegistry, index, resolvedTransition]);
 
   const isActive = state.currentSlide === index;
   const isPrevious = state.previousSlide === index;
   const isTransitioning = state.previousSlide !== null;
 
   const contextValue: SlideContextValue = useMemo(
-    () => ({ id, index, isActive }),
-    [id, index, isActive],
+    () => ({ id, index, isActive, transition: resolvedTransition }),
+    [id, index, isActive, resolvedTransition],
   );
 
   // Only render if active or the outgoing slide during a transition
@@ -50,7 +65,7 @@ export function Slide({ children, id, className, transition = "none" }: SlidePro
 
   // Compute transition styles
   const transitionStyle = isTransitioning
-    ? computeTransitionStyle(transition, state.slideTransitionProgress, state.direction, isActive)
+    ? computeTransitionStyle(resolvedTransition, state.slideTransitionProgress, state.direction, isActive)
     : undefined;
 
   return (

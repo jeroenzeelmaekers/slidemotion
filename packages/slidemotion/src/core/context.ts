@@ -1,10 +1,9 @@
 import { createContext } from "react";
+import type { ReactNode } from "react";
 import type {
-  PresentationConfig,
   PresentationState,
   PresentationAction,
   Direction,
-  EventTriggerState,
   SlideTransition,
 } from "./types.js";
 import type { StepRegistry } from "./step-registry.js";
@@ -16,21 +15,19 @@ import type { StepRegistry } from "./step-registry.js";
 
 export type SlideTransitionRegistry = {
   readonly register: (slideIndex: number, transition: SlideTransition) => void;
+  readonly unregister: (slideIndex: number) => void;
   readonly get: (slideIndex: number) => SlideTransition;
 };
 
-// ---------------------------------------------------------------------------
-// Slide Index Counter
-// Mutable counter reset each render by <Presenter>, read by <Slide> to
-// determine render-order index. Works because React renders children
-// synchronously top-down within a single render pass.
-// ---------------------------------------------------------------------------
-
 export type SlideIndexCounter = {
-  /** Claim the next index. Called by <Slide> during render. */
   next(): number;
-  /** How many indices have been claimed this render pass. */
   readonly count: number;
+};
+
+export type SpeakerNotesRegistry = {
+  readonly register: (slideIndex: number, notes: ReactNode) => void;
+  readonly unregister: (slideIndex: number) => void;
+  readonly get: (slideIndex: number) => ReactNode | null;
 };
 
 // ---------------------------------------------------------------------------
@@ -46,6 +43,7 @@ export type PresentationContextValue = {
   readonly setSlideCount: (count: number) => void;
   readonly slideTransitionRegistry: SlideTransitionRegistry;
   readonly slideIndexCounter: SlideIndexCounter;
+  readonly speakerNotesRegistry: SpeakerNotesRegistry;
 };
 
 export const PresentationContext = createContext<PresentationContextValue | null>(null);
@@ -59,9 +57,11 @@ export type SlideContextValue = {
   readonly id: string;
   readonly index: number;
   readonly isActive: boolean;
+  readonly transition: SlideTransition;
 };
 
 export const SlideContext = createContext<SlideContextValue | null>(null);
+export const SlideRenderIndexContext = createContext<number | null>(null);
 
 // ---------------------------------------------------------------------------
 // Step Context
@@ -74,6 +74,7 @@ export type StepContextValue = {
   readonly isVisible: boolean;
   readonly progress: number;
   readonly direction: Direction;
+  readonly status: "hidden" | "entering" | "visible" | "exiting";
 };
 
 export const StepContext = createContext<StepContextValue | null>(null);

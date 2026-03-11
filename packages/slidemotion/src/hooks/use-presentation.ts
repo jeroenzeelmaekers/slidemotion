@@ -23,6 +23,7 @@ export function usePresentation() {
     slideCount,
     direction: state.direction,
     animationStatus: state.animationStatus,
+    activeStepDuration: state.activeStepDuration,
     config: state.config,
 
     next: () => dispatch({ type: "next" }),

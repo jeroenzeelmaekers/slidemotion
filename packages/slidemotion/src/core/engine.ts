@@ -25,6 +25,7 @@ export function createInitialState(config: PresentationConfig): PresentationStat
     currentSlide: 0,
     currentStep: 0,
     stepProgress: 1, // Start at 1 — step 0 is "initial state", fully visible
+    activeStepDuration: config.defaultStepDuration,
     direction: "forward",
     events: new Map(),
     config,
@@ -55,11 +56,14 @@ export function presentationReducer(
       const maxStep = stepRegistry.getMaxStep(state.currentSlide);
 
       if (state.currentStep < maxStep) {
+        const nextStep = state.currentStep + 1;
         // Advance to next step within slide
         return {
           ...state,
-          currentStep: state.currentStep + 1,
+          currentStep: nextStep,
           stepProgress: 0,
+          activeStepDuration:
+            stepRegistry.getStepDuration(state.currentSlide, nextStep) ?? state.config.defaultStepDuration,
           direction: "forward",
           animationStatus: "running",
         };
@@ -76,6 +80,7 @@ export function presentationReducer(
           currentSlide: nextSlide,
           currentStep: 0,
           stepProgress: 1,
+          activeStepDuration: state.config.defaultStepDuration,
           direction: "forward",
           animationStatus: hasTransition ? "running" : "idle",
           previousSlide: hasTransition ? state.currentSlide : null,
@@ -91,11 +96,14 @@ export function presentationReducer(
       if (state.animationStatus === "running") return state;
 
       if (state.currentStep > 0) {
+        const nextStep = state.currentStep - 1;
         // Go back one step
         return {
           ...state,
-          currentStep: state.currentStep - 1,
+          currentStep: nextStep,
           stepProgress: 1,
+          activeStepDuration:
+            stepRegistry.getStepDuration(state.currentSlide, nextStep) ?? state.config.defaultStepDuration,
           direction: "backward",
           animationStatus: "idle",
         };
@@ -114,6 +122,8 @@ export function presentationReducer(
           currentSlide: prevSlide,
           currentStep: prevMaxStep,
           stepProgress: 1,
+          activeStepDuration:
+            stepRegistry.getStepDuration(prevSlide, prevMaxStep) ?? state.config.defaultStepDuration,
           direction: "backward",
           animationStatus: hasTransition ? "running" : "idle",
           previousSlide: hasTransition ? state.currentSlide : null,
@@ -136,6 +146,8 @@ export function presentationReducer(
         currentSlide: slide,
         currentStep: step,
         stepProgress: 1,
+        activeStepDuration:
+          stepRegistry.getStepDuration(slide, step) ?? state.config.defaultStepDuration,
         direction: slide >= state.currentSlide ? "forward" : "backward",
         animationStatus: "idle",
         previousSlide: null,
@@ -194,6 +206,13 @@ export function presentationReducer(
       // This is handled outside the reducer (step registry is external)
       // but we include it for completeness / future use
       return state;
+    }
+
+    case "setStepDuration": {
+      return {
+        ...state,
+        activeStepDuration: action.duration,
+      };
     }
 
     case "updateSlideTransition": {

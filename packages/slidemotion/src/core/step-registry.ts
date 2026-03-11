@@ -16,17 +16,35 @@
  */
 export function createStepRegistry() {
   // slideIndex → Set of registered step orders
-  const registry = new Map<number, Map<string, number>>();
+  const registry = new Map<number, Map<string, StepRegistration>>();
   const listeners = new Set<() => void>();
 
   function getMaxStep(slideIndex: number): number {
     const entries = registry.get(slideIndex);
     if (!entries || entries.size === 0) return 0;
     let max = 0;
-    for (const order of entries.values()) {
-      if (order > max) max = order;
+    for (const entry of entries.values()) {
+      if (entry.order > max) max = entry.order;
     }
     return max;
+  }
+
+  function getStepDuration(slideIndex: number, order: number): number | undefined {
+    const entries = registry.get(slideIndex);
+    if (!entries || entries.size === 0) return undefined;
+
+    let resolvedDuration: number | undefined;
+    for (const entry of entries.values()) {
+      if (entry.order !== order || entry.duration === undefined) {
+        continue;
+      }
+
+      resolvedDuration = resolvedDuration === undefined
+        ? entry.duration
+        : Math.max(resolvedDuration, entry.duration);
+    }
+
+    return resolvedDuration;
   }
 
   /**
@@ -35,13 +53,18 @@ export function createStepRegistry() {
    * @param id - Unique id for this registration (component instance)
    * @param order - The step order number
    */
-  function register(slideIndex: number, id: string, order: number) {
+  function register(
+    slideIndex: number,
+    id: string,
+    order: number,
+    duration?: number,
+  ) {
     let entries = registry.get(slideIndex);
     if (!entries) {
       entries = new Map();
       registry.set(slideIndex, entries);
     }
-    entries.set(id, order);
+    entries.set(id, { order, duration });
     notify();
   }
 
@@ -74,8 +97,14 @@ export function createStepRegistry() {
     register,
     unregister,
     getMaxStep,
+    getStepDuration,
     subscribe,
   } as const;
 }
 
 export type StepRegistry = ReturnType<typeof createStepRegistry>;
+
+type StepRegistration = {
+  readonly order: number;
+  readonly duration: number | undefined;
+};

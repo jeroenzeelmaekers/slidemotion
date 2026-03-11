@@ -12,6 +12,8 @@ export type ScaleInProps = {
   readonly children: ReactNode;
   /** Starting scale. Default: 0.8. */
   readonly from?: number;
+  /** Ending scale when exiting backward. Defaults to `from`. */
+  readonly exitTo?: number;
   readonly style?: CSSProperties;
   readonly className?: string;
 };
@@ -19,6 +21,7 @@ export type ScaleInProps = {
 export function ScaleIn({
   children,
   from = 0.8,
+  exitTo = from,
   style,
   className,
 }: ScaleInProps) {
@@ -26,7 +29,12 @@ export function ScaleIn({
   const resolvedClassName = mergeClassName(themeSlot?.className, className);
 
   return (
-    <Animate enter={{ opacity: 0, scale: from }} style={style} className={resolvedClassName}>
+    <Animate
+      enter={{ opacity: 0, scale: from }}
+      exit={{ opacity: 0, scale: exitTo }}
+      style={style}
+      className={resolvedClassName}
+    >
       {children}
     </Animate>
   );

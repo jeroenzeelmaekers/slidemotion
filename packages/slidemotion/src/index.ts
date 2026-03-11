@@ -38,10 +38,13 @@ export { Stagger, type StaggerProps } from "./components/transitions/stagger.js"
 
 // Code
 export { Code } from "./code/code.js";
-export type { CodeProps, CodeClassNames, TerminalProps, TerminalClassNames } from "./code/types.js";
+export type { CodeProps, CodeClassNames, TerminalProps, TerminalClassNames, CodeRenderer } from "./code/types.js";
 export { Terminal } from "./code/terminal.js";
-export { initHighlighter, getSharedHighlighter, SM_CODE_THEME } from "./code/highlighter.js";
+export { initHighlighter } from "./code/highlighter.js";
+export { initHighlighterJavaScript } from "./code/highlighter-javascript.js";
+export { getSharedHighlighter, SM_CODE_THEME } from "./code/highlighter-shared.js";
 export { parseLineRange } from "./code/types.js";
+export { atSteps, stepOrders, rangeStepOrders } from "./code/step-orders.js";
 
 // Presenter
 export { Presenter, type PresenterProps, type PresenterClassNames } from "./presenter/presenter.js";

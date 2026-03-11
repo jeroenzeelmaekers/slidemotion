@@ -12,14 +12,25 @@ export type FadeInProps = {
   readonly children: ReactNode;
   readonly style?: CSSProperties;
   readonly className?: string;
+  readonly exitOpacity?: number;
 };
 
-export function FadeIn({ children, style, className }: FadeInProps) {
+export function FadeIn({
+  children,
+  style,
+  className,
+  exitOpacity = 0,
+}: FadeInProps) {
   const themeSlot = useComponentTheme("FadeIn");
   const resolvedClassName = mergeClassName(themeSlot?.className, className);
 
   return (
-    <Animate enter={{ opacity: 0 }} style={style} className={resolvedClassName}>
+    <Animate
+      enter={{ opacity: 0 }}
+      exit={{ opacity: exitOpacity }}
+      style={style}
+      className={resolvedClassName}
+    >
       {children}
     </Animate>
   );

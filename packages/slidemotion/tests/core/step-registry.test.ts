@@ -16,6 +16,17 @@ describe("createStepRegistry", () => {
     expect(reg.getMaxStep(0)).toBe(3);
   });
 
+  it("tracks step durations per slide order", () => {
+    const reg = createStepRegistry();
+    reg.register(0, "a", 1, 200);
+    reg.register(0, "b", 1, 450);
+    reg.register(0, "c", 2, 300);
+
+    expect(reg.getStepDuration(0, 1)).toBe(450);
+    expect(reg.getStepDuration(0, 2)).toBe(300);
+    expect(reg.getStepDuration(0, 3)).toBeUndefined();
+  });
+
   it("isolates slides", () => {
     const reg = createStepRegistry();
     reg.register(0, "a", 5);
