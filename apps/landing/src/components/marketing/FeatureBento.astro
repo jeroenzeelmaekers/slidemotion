@@ -1,0 +1,119 @@
+---
+import type { BentoCard } from "../../data/marketing";
+
+interface Props {
+  cards: [BentoCard, BentoCard, BentoCard];
+  description: string;
+  eyebrow: string;
+  title: string;
+}
+
+const { cards, description, eyebrow, title } = Astro.props;
+const [codeCard, terminalCard, motionCard] = cards;
+---
+
+<section class="border-b border-[var(--border)]" id="features">
+  <div class="mx-auto max-w-[1440px] px-6 py-20 sm:px-10 lg:px-16">
+    <div class="mx-auto max-w-[720px] text-center">
+      <p class="text-[11px] font-semibold tracking-[0.3em] text-[var(--accent-strong)] uppercase">{eyebrow}</p>
+      <h2 class="mt-4 text-balance text-4xl font-semibold tracking-[-0.05em] text-[var(--text)] sm:text-[2.8rem]">
+        {title}
+      </h2>
+      <p class="mt-5 text-[1.05rem] leading-8 text-[var(--muted)]">{description}</p>
+    </div>
+
+    <div class="mt-14 space-y-4">
+      <div class="grid gap-4 lg:grid-cols-2">
+        <article class="flex min-h-[360px] flex-col justify-between overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface)]">
+          <div class="space-y-4 px-6 pt-6">
+            <div class="inline-flex h-10 w-10 items-center justify-center rounded-[10px] bg-[var(--accent-soft)] font-mono-ui text-sm font-semibold text-[var(--accent)]">
+              &lt;/&gt;
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-[var(--text)]">{codeCard.title}</h3>
+              <p class="mt-3 max-w-[28rem] text-sm leading-7 text-[var(--muted)]">{codeCard.description}</p>
+            </div>
+          </div>
+
+          <div class="mx-4 mb-4 overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--panel)]">
+            <div class="grid grid-cols-[auto_1fr_auto] gap-3 border-b border-[var(--border)] px-4 py-3 text-[11px] uppercase tracking-[0.24em] text-[var(--subtle)]">
+              <span class="font-mono-ui">before</span>
+              <span></span>
+              <span class="font-mono-ui">after</span>
+            </div>
+            <div class="grid gap-4 px-4 py-5 sm:grid-cols-2">
+              <pre class="overflow-x-auto rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-4 font-mono-ui text-[12px] leading-6 text-[var(--muted)]"><code>const title =
+  "Launch day";
+
+<span class="text-[var(--accent)]">return</span> &lt;Hero
+  title=&#123;title&#125;
+/&gt;;</code></pre>
+              <pre class="overflow-x-auto rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-4 font-mono-ui text-[12px] leading-6 text-[var(--muted)]"><code>const title =
+  "Launch week";
+
+<span class="text-[var(--accent)]">return</span> &lt;Hero
+  title=&#123;title&#125;
+  step=&#123;2&#125;
+/&gt;;</code></pre>
+            </div>
+          </div>
+        </article>
+
+        <article class="flex min-h-[360px] flex-col justify-between overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface)]">
+          <div class="space-y-4 px-6 pt-6">
+            <div class="inline-flex h-10 w-10 items-center justify-center rounded-[10px] bg-[var(--accent-soft)] font-mono-ui text-sm font-semibold text-[var(--accent)]">
+              &gt;_
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-[var(--text)]">{terminalCard.title}</h3>
+              <p class="mt-3 max-w-[28rem] text-sm leading-7 text-[var(--muted)]">{terminalCard.description}</p>
+            </div>
+          </div>
+
+          <div class="mx-4 mb-4 rounded-[18px] border border-[var(--border)] bg-[var(--panel)] p-4 font-mono-ui text-[12px] leading-6 text-[var(--muted)]">
+            <div class="mb-4 flex items-center justify-between text-[11px] uppercase tracking-[0.24em] text-[var(--subtle)]">
+              <span>terminal</span>
+              <span>step 03</span>
+            </div>
+            <div class="space-y-3 rounded-[14px] border border-[var(--border)] bg-[var(--surface)] p-4">
+              <p><span class="text-[var(--accent)]">$</span> bun install</p>
+              <p class="text-[var(--muted)]">installed 182 packages in 1.4s</p>
+              <p><span class="text-[var(--accent)]">$</span> bun run dev</p>
+              <p class="text-cyan-500/80">local: http://localhost:4321</p>
+              <p class="text-[var(--subtle)]">press <span class="text-[var(--text)]">p</span> to open presenter mode</p>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <article class="overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--surface)]">
+        <div class="grid gap-8 px-6 py-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+          <div class="space-y-4">
+            <div class="inline-flex h-10 w-10 items-center justify-center rounded-[10px] bg-[var(--accent-soft)] font-mono-ui text-sm font-semibold text-[var(--accent)]">
+              ~
+            </div>
+            <div>
+              <h3 class="text-xl font-semibold text-[var(--text)]">{motionCard.title}</h3>
+              <p class="mt-3 max-w-[34rem] text-sm leading-7 text-[var(--muted)]">{motionCard.description}</p>
+            </div>
+          </div>
+
+          <div class="grid gap-4 rounded-[18px] border border-[var(--border)] bg-[var(--panel)] p-5 sm:grid-cols-3">
+            <div class="rounded-[16px] border border-[var(--border)] bg-[var(--surface)] p-4">
+              <div class="mb-6 h-24 rounded-full bg-[var(--glow-left)] blur-2xl"></div>
+              <p class="font-mono-ui text-[12px] text-[var(--subtle)]">FadeIn</p>
+            </div>
+            <div class="rounded-[16px] border border-[var(--border)] bg-[var(--surface)] p-4">
+              <div class="mb-6 h-24 rounded-full bg-[var(--glow-right)] blur-2xl"></div>
+              <p class="font-mono-ui text-[12px] text-[var(--subtle)]">Stagger</p>
+            </div>
+            <div class="rounded-[16px] border border-[var(--border)] bg-[var(--surface)] p-4">
+              <div class="mb-6 h-24 rounded-full bg-[var(--accent-soft)] blur-2xl"></div>
+              <p class="font-mono-ui text-[12px] text-[var(--subtle)]">SlideIn</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

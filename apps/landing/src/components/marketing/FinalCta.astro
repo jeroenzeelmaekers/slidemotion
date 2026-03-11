@@ -1,0 +1,91 @@
+---
+import type { LinkItem } from "../../data/marketing";
+
+interface Props {
+  description: string;
+  latestVersion: string;
+  primaryCta: LinkItem;
+  secondaryCta: LinkItem;
+  weeklyDownloads: string;
+  title: string;
+}
+
+const { description, latestVersion, primaryCta, secondaryCta, title, weeklyDownloads } = Astro.props;
+---
+
+<section class="border-b border-[var(--border)] bg-[var(--surface)]/70">
+  <div class="mx-auto max-w-[1440px] px-6 py-20 sm:px-10 lg:px-16">
+    <div class="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] px-6 py-12 text-center sm:px-10 lg:px-16 lg:py-16">
+      <h2 class="mx-auto max-w-[640px] text-balance text-[2.4rem] font-semibold tracking-[-0.05em] text-[var(--text)] sm:text-[3rem]">
+        {title}
+      </h2>
+      <p class="mx-auto mt-5 max-w-[520px] text-[1.02rem] leading-8 text-[var(--muted)]">{description}</p>
+
+      <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          href={primaryCta.href}
+          class="inline-flex min-w-[200px] items-center justify-center rounded-[10px] bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-[var(--accent-contrast)] transition-transform duration-200 hover:-translate-y-0.5"
+        >
+          {primaryCta.label}
+        </a>
+        <a
+          href={secondaryCta.href}
+          class="inline-flex min-w-[200px] items-center justify-center rounded-[10px] border border-[var(--border)] px-6 py-3.5 text-sm font-semibold text-[var(--text)] transition-colors duration-200 hover:bg-[var(--panel)]"
+        >
+          {secondaryCta.label}
+        </a>
+      </div>
+
+      <div class="mt-10 grid gap-px overflow-hidden rounded-[20px] border border-[var(--border)] bg-[var(--border)] md:grid-cols-3">
+        <div class="bg-[var(--bg)] px-6 py-7">
+          <p class="font-mono-ui text-[1.7rem] font-bold text-[var(--accent)]" data-npm-downloads>{weeklyDownloads}</p>
+          <p class="mt-2 text-sm text-[var(--muted)]">Weekly npm downloads</p>
+        </div>
+        <div class="bg-[var(--bg)] px-6 py-7">
+          <p class="font-mono-ui text-[1.7rem] font-bold text-[var(--accent)]" data-npm-version>{latestVersion}</p>
+          <p class="mt-2 text-sm text-[var(--muted)]">Latest published version</p>
+        </div>
+        <div class="bg-[var(--bg)] px-6 py-7">
+          <p class="font-mono-ui text-[1.7rem] font-bold text-[var(--accent)]">MIT</p>
+          <p class="mt-2 text-sm text-[var(--muted)]">Open source license</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    const downloadsNode = document.querySelector("[data-npm-downloads]");
+    const versionNode = document.querySelector("[data-npm-version]");
+
+    const formatCompact = (value) =>
+      new Intl.NumberFormat("en", {
+        maximumFractionDigits: 1,
+        notation: value >= 1000 ? "compact" : "standard",
+      }).format(value);
+
+    Promise.all([
+      fetch("https://api.npmjs.org/downloads/point/last-week/slidemotion", {
+        headers: { Accept: "application/json" },
+      }).then((response) => (response.ok ? response.json() : null)),
+      fetch("https://registry.npmjs.org/slidemotion", {
+        headers: { Accept: "application/json" },
+      }).then((response) => (response.ok ? response.json() : null)),
+    ])
+      .then(([downloads, registry]) => {
+        if (downloadsNode && downloads && typeof downloads.downloads === "number") {
+          downloadsNode.textContent = formatCompact(downloads.downloads);
+        }
+
+        if (
+          versionNode &&
+          registry &&
+          typeof registry === "object" &&
+          registry["dist-tags"] &&
+          typeof registry["dist-tags"].latest === "string"
+        ) {
+          versionNode.textContent = registry["dist-tags"].latest;
+        }
+      })
+      .catch(() => undefined);
+  </script>
+</section>

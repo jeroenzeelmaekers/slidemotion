@@ -1,0 +1,68 @@
+---
+import FeatureBento from "../components/marketing/FeatureBento.astro";
+import FeatureGrid from "../components/marketing/FeatureGrid.astro";
+import FinalCta from "../components/marketing/FinalCta.astro";
+import Footer from "../components/marketing/Footer.astro";
+import Header from "../components/marketing/Header.astro";
+import Hero from "../components/marketing/Hero.astro";
+import HowItWorks from "../components/marketing/HowItWorks.astro";
+import TrustBar from "../components/marketing/TrustBar.astro";
+import { marketingPage } from "../data/marketing";
+import { formatCompactNumber, getNpmStats } from "../lib/npm-stats";
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+
+const npmStats = await getNpmStats();
+---
+
+<MarketingLayout
+  title="slidemotion - presentations that feel like code"
+  description="A marketing site for slidemotion, the React framework for code-first presentations."
+>
+  <div class="relative isolate overflow-hidden">
+    <div class="pointer-events-none absolute inset-y-0 left-0 hidden w-[40px] border-r border-[var(--border)] xl:block"></div>
+    <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-[40px] border-l border-[var(--border)] xl:block"></div>
+    <div class="pointer-events-none absolute inset-y-0 left-1/2 hidden w-full max-w-[1440px] -translate-x-1/2 xl:block">
+      <div class="absolute inset-y-0 left-10 w-px bg-[var(--border)]"></div>
+      <div class="absolute inset-y-0 right-10 w-px bg-[var(--border)]"></div>
+    </div>
+
+    <div>
+      <Header links={marketingPage.nav} cta={marketingPage.hero.primaryCta} />
+      <main>
+        <Hero
+          title={marketingPage.hero.title}
+          description={marketingPage.hero.description}
+          primaryCta={marketingPage.hero.primaryCta}
+          secondaryCta={marketingPage.hero.secondaryCta}
+          latestVersion={npmStats.latestVersion}
+        />
+        <TrustBar label={marketingPage.trustBar.label} items={marketingPage.trustBar.items} />
+        <FeatureBento
+          eyebrow={marketingPage.featureBento.eyebrow}
+          title={marketingPage.featureBento.title}
+          description={marketingPage.featureBento.description}
+          cards={marketingPage.featureBento.cards}
+        />
+        <FeatureGrid
+          eyebrow={marketingPage.featureGrid.eyebrow}
+          title={marketingPage.featureGrid.title}
+          cards={marketingPage.featureGrid.cards}
+        />
+        <HowItWorks
+          eyebrow={marketingPage.steps.eyebrow}
+          title={marketingPage.steps.title}
+          steps={marketingPage.steps.items}
+        />
+        <FinalCta
+          title={marketingPage.cta.title}
+          description={marketingPage.cta.description}
+          primaryCta={marketingPage.cta.primaryCta}
+          secondaryCta={marketingPage.cta.secondaryCta}
+          weeklyDownloads={formatCompactNumber(npmStats.weeklyDownloads)}
+          latestVersion={npmStats.latestVersion}
+        />
+      </main>
+      <Footer tagline={marketingPage.footer.tagline} columns={marketingPage.footer.columns} />
+    </div>
+  </div>
+</MarketingLayout>
