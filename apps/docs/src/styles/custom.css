@@ -1,0 +1,343 @@
+@layer starlight.base, starlight.theme, starlight.components, starlight.overrides;
+
+@layer starlight.theme {
+  :root,
+  ::backdrop {
+    color-scheme: light dark;
+    --sl-font: "Inter";
+    --sl-font-mono: "JetBrains Mono";
+
+    --sl-color-white: #f5f0ea;
+    --sl-color-gray-1: #efe6dc;
+    --sl-color-gray-2: #cabfb5;
+    --sl-color-gray-3: #9f9084;
+    --sl-color-gray-4: #6e645b;
+    --sl-color-gray-5: #27231f;
+    --sl-color-gray-6: #1a1815;
+    --sl-color-black: #141210;
+
+    --sl-color-accent-low: #4a2818;
+    --sl-color-accent: #c2734a;
+    --sl-color-accent-high: #f2c3a5;
+
+    --sl-color-text: #f5f0ea;
+    --sl-color-text-accent: #d4956e;
+    --sl-color-text-invert: #ffffff;
+    --sl-color-bg: #141210;
+    --sl-color-bg-nav: rgb(20 18 16 / 0.86);
+    --sl-color-bg-sidebar: #1a1815;
+    --sl-color-bg-inline-code: #221f1b;
+    --sl-color-bg-accent: #c2734a;
+    --sl-color-hairline-light: #2f2a25;
+    --sl-color-hairline: #27231f;
+    --sl-color-hairline-shade: #141210;
+    --sl-color-backdrop-overlay: rgb(20 18 16 / 0.68);
+
+    --sl-shadow-sm: 0 10px 30px -24px rgb(0 0 0 / 0.65);
+    --sl-shadow-md: 0 24px 80px -40px rgb(194 115 74 / 0.24);
+    --sl-shadow-lg: 0 34px 120px -52px rgb(194 115 74 / 0.28);
+
+    --sl-nav-height: 4rem;
+    --sl-sidebar-width: 19.5rem;
+    --sl-content-width: 48rem;
+    --sl-content-pad-x: 1.25rem;
+    --sl-sidebar-pad-x: 1.25rem;
+    --sl-main-pad: 0 0 4rem;
+  }
+
+  :root[data-theme="light"],
+  [data-theme="light"] ::backdrop {
+    --sl-color-white: #1a1714;
+    --sl-color-gray-1: #2f241d;
+    --sl-color-gray-2: #4e443b;
+    --sl-color-gray-3: #6e645b;
+    --sl-color-gray-4: #9d9287;
+    --sl-color-gray-5: #d9d1c8;
+    --sl-color-gray-6: #ede7df;
+    --sl-color-gray-7: #f5f1eb;
+    --sl-color-black: #fafaf8;
+
+    --sl-color-accent-high: #8f4728;
+    --sl-color-accent: #b8613a;
+    --sl-color-accent-low: #f3d2c0;
+
+    --sl-color-text: #1a1714;
+    --sl-color-text-accent: #8f4728;
+    --sl-color-text-invert: #ffffff;
+    --sl-color-bg: #fafaf8;
+    --sl-color-bg-nav: rgb(250 250 248 / 0.86);
+    --sl-color-bg-sidebar: #f5f4f1;
+    --sl-color-bg-inline-code: #edeae5;
+    --sl-color-bg-accent: #b8613a;
+    --sl-color-hairline-light: #e8e0d7;
+    --sl-color-hairline: #e4ddd4;
+    --sl-color-hairline-shade: #e4ddd4;
+    --sl-color-backdrop-overlay: rgb(78 68 59 / 0.38);
+
+    --sl-shadow-sm: 0 10px 30px -24px rgb(26 23 20 / 0.18);
+    --sl-shadow-md: 0 24px 80px -40px rgb(184 97 58 / 0.18);
+    --sl-shadow-lg: 0 34px 120px -52px rgb(184 97 58 / 0.22);
+  }
+
+  @media (min-width: 72rem) {
+    :root {
+      --sl-content-pad-x: 1.5rem;
+      --sl-sidebar-pad-x: 1.5rem;
+    }
+  }
+}
+
+@layer starlight.overrides {
+  html {
+    background:
+      radial-gradient(circle at top left, rgb(194 115 74 / 0.16), transparent 24rem),
+      radial-gradient(circle at top right, rgb(34 211 238 / 0.12), transparent 22rem),
+      var(--sl-color-bg);
+  }
+
+  body {
+    background: transparent;
+    color: var(--sl-color-text);
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-text-invert);
+  }
+
+  .header {
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .sidebar-pane {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.02), transparent 18%),
+      var(--sl-color-bg-sidebar);
+  }
+
+  .content-panel {
+    position: relative;
+    padding-block: 1.75rem;
+  }
+
+  .content-panel:first-of-type {
+    padding-top: 2rem;
+  }
+
+  .content-panel .sl-container {
+    padding: 0;
+  }
+
+  .content-panel + .content-panel {
+    border-top: 1px solid var(--sl-color-hairline);
+    padding-top: 0;
+  }
+
+  @media (min-width: 50rem) {
+    .content-panel {
+      padding-block: 2rem;
+    }
+
+    .content-panel .sl-container {
+      padding: 0;
+    }
+  }
+
+  .site-title {
+    font-family: var(--__sl-font-mono);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--sl-color-text);
+  }
+
+  .social-icons::after {
+    border-inline-end-color: var(--sl-color-hairline);
+  }
+
+  .sl-markdown-content :is(h1, h2, h3) {
+    letter-spacing: -0.05em;
+    color: var(--sl-color-text);
+  }
+
+  .sl-markdown-content h1 {
+    font-size: clamp(2.5rem, 5vw, 4.25rem);
+    line-height: 0.98;
+  }
+
+  .sl-markdown-content h2 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.02;
+  }
+
+  .sl-markdown-content h3 {
+    font-size: clamp(1.35rem, 2vw, 1.7rem);
+    line-height: 1.1;
+  }
+
+  .sl-markdown-content :is(p, li) {
+    color: var(--sl-color-gray-2);
+  }
+
+  .sl-markdown-content a {
+    color: var(--sl-color-text-accent);
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.2em;
+  }
+
+  .sl-markdown-content a:hover {
+    color: var(--sl-color-text);
+  }
+
+  .sl-markdown-content code:not(:where(pre code, .not-content *)) {
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    background: var(--sl-color-bg-inline-code);
+    color: var(--sl-color-text);
+    padding-inline: 0.38em;
+  }
+
+  .sl-markdown-content pre,
+  .sl-markdown-content blockquote,
+  .sl-markdown-content table,
+  .pagination-links a {
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 1rem;
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.03), transparent 28%),
+      color-mix(in srgb, var(--sl-color-bg) 74%, var(--sl-color-bg-sidebar));
+    box-shadow: var(--sl-shadow-sm);
+  }
+
+  .sl-markdown-content blockquote {
+    border-inline-start-width: 1px;
+    padding: 1rem 1.1rem;
+  }
+
+  .sl-markdown-content th {
+    color: var(--sl-color-text);
+  }
+
+  .sl-markdown-content :is(th, td) {
+    border-color: var(--sl-color-hairline);
+  }
+
+  .pagination-links a {
+    gap: 0.85rem;
+    border-radius: 1rem;
+    padding: 1.1rem 1.15rem;
+    color: var(--sl-color-gray-2);
+    box-shadow: var(--sl-shadow-md);
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .pagination-links a:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--sl-color-text) 30%, var(--sl-color-hairline));
+    color: var(--sl-color-text);
+  }
+
+  .pagination-links .link-title {
+    color: var(--sl-color-text);
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    letter-spacing: -0.04em;
+  }
+
+  .right-sidebar {
+    border-inline-start-color: var(--sl-color-hairline);
+  }
+
+  .right-sidebar-panel h2 {
+    color: var(--sl-color-text);
+    font-family: var(--__sl-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .right-sidebar-panel :where(a) {
+    color: var(--sl-color-gray-3);
+    border-radius: 0.6rem;
+    padding: 0.35rem 0.55rem;
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .right-sidebar-panel :where(a):hover,
+  .right-sidebar-panel :where(a)[aria-current="true"] {
+    background: var(--sl-color-bg-inline-code);
+    color: var(--sl-color-text);
+  }
+
+  .sidebar-content ul ul li {
+    border-inline-start-color: var(--sl-color-hairline);
+  }
+
+  .sidebar-content .large,
+  .sidebar-content summary,
+  .sidebar-content a {
+    border-radius: 0.75rem;
+  }
+
+  .sidebar-content a,
+  .sidebar-content summary {
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .sidebar-content a:hover,
+  .sidebar-content summary:hover {
+    background: color-mix(in srgb, var(--sl-color-bg-inline-code) 82%, transparent);
+    color: var(--sl-color-text);
+  }
+
+  .sidebar-content [aria-current="page"],
+  .sidebar-content [aria-current="page"]:hover,
+  .sidebar-content [aria-current="page"]:focus {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-text-invert);
+    box-shadow: 0 16px 40px -24px color-mix(in srgb, var(--sl-color-accent) 70%, transparent);
+  }
+
+  .sidebar-content .group-label .large,
+  .sidebar-content .large {
+    color: var(--sl-color-text);
+  }
+
+  .sidebar-content .caret,
+  .pagination-links svg {
+    color: var(--sl-color-text-accent);
+  }
+
+  .hero {
+    gap: 2rem;
+  }
+
+  .hero .copy > h1,
+  [data-page-title] {
+    letter-spacing: -0.06em;
+    color: var(--sl-color-text);
+  }
+
+  .hero .tagline,
+  .sl-markdown-content .expressive-code .frame,
+  .sl-markdown-content .expressive-code .ec-line,
+  .sl-markdown-content .expressive-code .copy button {
+    color: inherit;
+  }
+
+  @media (max-width: 49.999rem) {
+    .content-panel .sl-container {
+      padding: 0;
+    }
+  }
+}
