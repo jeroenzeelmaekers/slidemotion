@@ -39,9 +39,10 @@ export function createStepRegistry() {
         continue;
       }
 
-      resolvedDuration = resolvedDuration === undefined
-        ? entry.duration
-        : Math.max(resolvedDuration, entry.duration);
+      resolvedDuration =
+        resolvedDuration === undefined
+          ? entry.duration
+          : Math.max(resolvedDuration, entry.duration);
     }
 
     return resolvedDuration;
@@ -53,12 +54,7 @@ export function createStepRegistry() {
    * @param id - Unique id for this registration (component instance)
    * @param order - The step order number
    */
-  function register(
-    slideIndex: number,
-    id: string,
-    order: number,
-    duration?: number,
-  ) {
+  function register(slideIndex: number, id: string, order: number, duration?: number) {
     let entries = registry.get(slideIndex);
     if (!entries) {
       entries = new Map();
@@ -84,7 +80,9 @@ export function createStepRegistry() {
 
   function subscribe(listener: () => void): () => void {
     listeners.add(listener);
-    return () => { listeners.delete(listener); };
+    return () => {
+      listeners.delete(listener);
+    };
   }
 
   function notify() {

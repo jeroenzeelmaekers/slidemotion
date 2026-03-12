@@ -22,11 +22,7 @@ export type ThemeProviderProps = {
  * Can be used standalone or implicitly via `<Presentation theme={...}>`.
  */
 export function ThemeProvider({ theme, children }: ThemeProviderProps): ReactNode {
-  return (
-    <ThemeContext.Provider value={theme}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;
 }
 
 /**
@@ -40,9 +36,7 @@ export function useTheme(): Theme | null {
  * Access a specific component's theme slot.
  * Returns undefined if no theme or slot not defined.
  */
-export function useComponentTheme<K extends keyof Theme>(
-  component: K,
-): Theme[K] | undefined {
+export function useComponentTheme<K extends keyof Theme>(component: K): Theme[K] | undefined {
   const theme = useContext(ThemeContext);
   if (!theme) return undefined;
   return theme[component];

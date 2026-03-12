@@ -1,9 +1,6 @@
 import { Animate, Slide, Step, Terminal, atSteps } from "slidemotion";
 
-const terminalSteps = [
-  { command: "bun install" },
-  { command: "bun test", output: "109 passed" },
-];
+const terminalSteps = [{ command: "bun install" }, { command: "bun test", output: "109 passed" }];
 
 export function SyncedTerminalSlide() {
   return (

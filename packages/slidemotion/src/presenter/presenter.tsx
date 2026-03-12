@@ -127,7 +127,10 @@ export function Presenter({
           {...(isIdle ? { "data-slidemotion-idle": "" } : {})}
         >
           {slideChildren.map((child, index) => (
-            <SlideRenderIndexContext.Provider key={getSlideChildKey(child, index, "slide")} value={index}>
+            <SlideRenderIndexContext.Provider
+              key={getSlideChildKey(child, index, "slide")}
+              value={index}
+            >
               {child}
             </SlideRenderIndexContext.Provider>
           ))}
@@ -153,12 +156,12 @@ export function Presenter({
 
       {/* Overview modal */}
       {showOverview && (
-        <Overview
-          {...overviewProps}
-          onClose={() => setShowOverview(false)}
-        >
+        <Overview {...overviewProps} onClose={() => setShowOverview(false)}>
           {slideChildren.map((child, index) => (
-            <SlideRenderIndexContext.Provider key={getSlideChildKey(child, index, "overview-slide")} value={index}>
+            <SlideRenderIndexContext.Provider
+              key={getSlideChildKey(child, index, "overview-slide")}
+              value={index}
+            >
               {child}
             </SlideRenderIndexContext.Provider>
           ))}
@@ -209,13 +212,7 @@ function DevtoolsPanel({
   );
 }
 
-function SpeakerNotesPanel({
-  children,
-  onClose,
-}: {
-  children: ReactNode;
-  onClose: () => void;
-}) {
+function SpeakerNotesPanel({ children, onClose }: { children: ReactNode; onClose: () => void }) {
   return (
     <div
       style={{

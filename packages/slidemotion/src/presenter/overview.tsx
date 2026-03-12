@@ -29,12 +29,7 @@ export type OverviewProps = {
   readonly classNames?: OverviewClassNames | undefined;
 };
 
-export function Overview({
-  children,
-  onClose,
-  className,
-  classNames,
-}: OverviewProps) {
+export function Overview({ children: _children, onClose, className, classNames }: OverviewProps) {
   const ctx = useContext(PresentationContext);
   if (!ctx) return null;
 
@@ -45,12 +40,14 @@ export function Overview({
   const { slideCount, dispatch } = ctx;
 
   return (
-    <div
-      className={resolvedClassName}
-      style={{ position: "fixed", inset: 0 }}
-      onClick={onClose}
-    >
-      <div className={resolvedClassNames?.grid}>
+    <div className={resolvedClassName} style={{ position: "fixed", inset: 0 }}>
+      <button
+        type="button"
+        aria-label="Close overview"
+        onClick={onClose}
+        style={{ position: "absolute", inset: 0 }}
+      />
+      <div className={resolvedClassNames?.grid} style={{ position: "relative" }}>
         {Array.from({ length: slideCount }, (_, i) => {
           const isActive = ctx.state.currentSlide === i;
           return (

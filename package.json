@@ -15,9 +15,17 @@
     "build": "bun run --filter slidemotion build",
     "build:landing": "bun run --filter landing build",
     "build:docs": "bun run --filter docs build",
+    "format": "oxfmt -c .oxfmtrc.json \"**/*.{ts,tsx,js,jsx,mjs,cjs}\" \"apps/**/*.astro\" \"!**/.astro/**\"",
+    "format:check": "oxfmt --check -c .oxfmtrc.json \"**/*.{ts,tsx,js,jsx,mjs,cjs}\" \"apps/**/*.astro\" \"!**/.astro/**\"",
+    "lint": "oxlint -c .oxlintrc.json .",
+    "lint:fix": "oxlint --fix -c .oxlintrc.json .",
     "preview:landing": "bun run --filter landing preview",
     "test": "bun run --filter slidemotion test",
     "test:watch": "bun run --filter slidemotion test:watch",
     "typecheck": "bun run --filter slidemotion typecheck && bun run --filter landing typecheck"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.39.0",
+    "oxlint": "^1.54.0"
   }
 }

@@ -5,7 +5,11 @@ import {
   resolveSlideTransitionDuration,
 } from "../../src/core/engine.js";
 import { createStepRegistry } from "../../src/core/step-registry.js";
-import type { PresentationConfig, PresentationState, SlideTransition } from "../../src/core/types.js";
+import type {
+  PresentationConfig,
+  PresentationState,
+  SlideTransition,
+} from "../../src/core/types.js";
 
 const defaultConfig: PresentationConfig = {
   width: 1920,
@@ -13,6 +17,10 @@ const defaultConfig: PresentationConfig = {
   defaultStepDuration: 300,
   defaultSlideTransition: "none",
 };
+
+function fadeOnSlideOne(index: number): SlideTransition {
+  return index === 1 ? "fade" : "none";
+}
 
 describe("createInitialState", () => {
   it("starts at slide 0, step 0, idle", () => {
@@ -46,7 +54,9 @@ describe("resolveSlideTransitionDuration", () => {
   });
 
   it("returns custom duration for push", () => {
-    expect(resolveSlideTransitionDuration({ type: "push", direction: "left", duration: 400 })).toBe(400);
+    expect(resolveSlideTransitionDuration({ type: "push", direction: "left", duration: 400 })).toBe(
+      400,
+    );
   });
 });
 
@@ -93,9 +103,8 @@ describe("next action", () => {
     const reg = createStepRegistry();
     // No steps on slide 0 → immediate slide advance
     const state = createInitialState(defaultConfig);
-    const getTransition = (i: number): SlideTransition => i === 1 ? "fade" : "none";
 
-    const next = presentationReducer(state, { type: "next" }, reg, 3, getTransition);
+    const next = presentationReducer(state, { type: "next" }, reg, 3, fadeOnSlideOne);
     expect(next.currentSlide).toBe(1);
     expect(next.previousSlide).toBe(0);
     expect(next.slideTransitionProgress).toBe(0);
@@ -165,10 +174,8 @@ describe("prev action", () => {
       currentSlide: 1,
       currentStep: 0,
     };
-    // Slide 1 has a fade transition
-    const getTransition = (i: number): SlideTransition => i === 1 ? "fade" : "none";
 
-    const prev = presentationReducer(state, { type: "prev" }, reg, 3, getTransition);
+    const prev = presentationReducer(state, { type: "prev" }, reg, 3, fadeOnSlideOne);
     expect(prev.currentSlide).toBe(0);
     expect(prev.previousSlide).toBe(1);
     expect(prev.slideTransitionProgress).toBe(0);
@@ -271,7 +278,12 @@ describe("slide transition actions", () => {
       animationStatus: "running",
     };
 
-    const next = presentationReducer(state, { type: "updateSlideTransition", progress: 0.6 }, reg, 3);
+    const next = presentationReducer(
+      state,
+      { type: "updateSlideTransition", progress: 0.6 },
+      reg,
+      3,
+    );
     expect(next.slideTransitionProgress).toBe(0.6);
   });
 
@@ -329,7 +341,12 @@ describe("event actions", () => {
       events: new Map([["x", { active: true, progress: 0 }]]),
     };
 
-    const next = presentationReducer(state, { type: "updateEventProgress", name: "x", progress: 0.5 }, reg, 1);
+    const next = presentationReducer(
+      state,
+      { type: "updateEventProgress", name: "x", progress: 0.5 },
+      reg,
+      1,
+    );
     expect(next.events.get("x")).toEqual({ active: true, progress: 0.5 });
   });
 
@@ -337,7 +354,12 @@ describe("event actions", () => {
     const reg = createStepRegistry();
     const state = createInitialState(defaultConfig);
 
-    const next = presentationReducer(state, { type: "updateEventProgress", name: "missing", progress: 0.5 }, reg, 1);
+    const next = presentationReducer(
+      state,
+      { type: "updateEventProgress", name: "missing", progress: 0.5 },
+      reg,
+      1,
+    );
     expect(next.events.has("missing")).toBe(false);
   });
 });

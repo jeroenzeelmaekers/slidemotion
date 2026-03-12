@@ -59,9 +59,7 @@ export function Controls({
 
       <span className={resolvedClassNames?.counter}>
         {currentSlide + 1} / {slideCount}
-        {currentStep > 0 && (
-          <span className={resolvedClassNames?.step}> · step {currentStep}</span>
-        )}
+        {currentStep > 0 && <span className={resolvedClassNames?.step}> · step {currentStep}</span>}
       </span>
 
       <button

@@ -66,7 +66,9 @@ describe("createStepRegistry", () => {
   it("notifies listeners on register", () => {
     const reg = createStepRegistry();
     let count = 0;
-    reg.subscribe(() => { count++; });
+    reg.subscribe(() => {
+      count++;
+    });
     reg.register(0, "a", 1);
     expect(count).toBe(1);
     reg.register(0, "b", 2);
@@ -77,7 +79,9 @@ describe("createStepRegistry", () => {
     const reg = createStepRegistry();
     reg.register(0, "a", 1);
     let count = 0;
-    reg.subscribe(() => { count++; });
+    reg.subscribe(() => {
+      count++;
+    });
     reg.unregister(0, "a");
     expect(count).toBe(1);
   });
@@ -85,7 +89,9 @@ describe("createStepRegistry", () => {
   it("unsubscribe stops notifications", () => {
     const reg = createStepRegistry();
     let count = 0;
-    const unsub = reg.subscribe(() => { count++; });
+    const unsub = reg.subscribe(() => {
+      count++;
+    });
     reg.register(0, "a", 1);
     expect(count).toBe(1);
     unsub();

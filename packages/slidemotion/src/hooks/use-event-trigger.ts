@@ -1,4 +1,4 @@
-import { useCallback, useContext, useId, useRef, useEffect } from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { PresentationContext } from "../core/context.js";
 import {
   createAnimationLoop,

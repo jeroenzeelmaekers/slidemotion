@@ -1,25 +1,12 @@
-import {
-  useContext,
-  useEffect,
-  useId,
-  useMemo,
-  useReducer,
-  useState,
-} from "react";
+import { useContext, useEffect, useId, useMemo, useReducer } from "react";
 import { ShikiMagicMove } from "shiki-magic-move/react";
 import type { HighlighterCore, ThemeRegistrationRaw, ThemedToken } from "shiki";
 import { PresentationContext, SlideContext } from "../core/context.js";
 import { getSharedHighlighter, SM_CODE_THEME } from "./highlighter-shared.js";
-import { parseLineRange, type CodeProps, type CodeRenderer } from "./types.js";
+import { parseLineRange, type CodeProps } from "./types.js";
 import { useComponentTheme } from "../theme/context.js";
 import { mergeClassName, mergeClassNames } from "../theme/merge.js";
-import {
-  countCompletedStepOrders,
-  resolveStepAliases,
-  resolveStepOrders,
-} from "./step-orders.js";
-
-let warnedAboutSharedHighlighter = false;
+import { countCompletedStepOrders, resolveStepAliases, resolveStepOrders } from "./step-orders.js";
 
 const FONT_STYLE_NONE = 0;
 const FONT_STYLE_ITALIC = 1;
@@ -39,9 +26,13 @@ function useResolvedTheme(
   theme: string | ThemeRegistrationRaw,
   highlighter: HighlighterCore | null,
 ): string | null {
-  const themeName = typeof theme === "object" ? theme.name ?? null : theme;
+  const themeName = typeof theme === "object" ? (theme.name ?? null) : theme;
   const themeObject = typeof theme === "object" ? theme : null;
-  const initialReady = !themeObject || (highlighter !== null && themeName !== null && highlighter.getLoadedThemes().includes(themeName));
+  const initialReady =
+    !themeObject ||
+    (highlighter !== null &&
+      themeName !== null &&
+      highlighter.getLoadedThemes().includes(themeName));
 
   const [state, dispatch] = useReducer(resolvedThemeReducer, {
     ready: initialReady,
@@ -116,26 +107,7 @@ export function Code({
   const highlighter = externalHighlighter ?? getSharedHighlighter();
   const resolvedTheme = useResolvedTheme(theme, highlighter);
 
-  useEffect(() => {
-    if (
-      animation === "morph" &&
-      !externalHighlighter &&
-      !highlighter &&
-      !warnedAboutSharedHighlighter &&
-      typeof window !== "undefined"
-    ) {
-      warnedAboutSharedHighlighter = true;
-      console.warn(
-        "[slidemotion] <Code> morph mode works best after calling initHighlighter(...) at app startup.",
-      );
-    }
-  }, [animation, externalHighlighter, highlighter]);
-
-  const resolvedExplicitStepOrders = resolveStepAliases(
-    atSteps,
-    explicitStepOrders,
-    "Code",
-  );
+  const resolvedExplicitStepOrders = resolveStepAliases(atSteps, explicitStepOrders, "Code");
   const codeStepOrders = resolveStepOrders(
     Math.max(steps.length - 1, 0),
     stepOffset,
@@ -418,25 +390,23 @@ function TokenCode({
         color: tokens.fg,
       }}
     >
-        <code>
-          {tokens.tokens.map((lineTokens, lineIndex) => {
-            const lineNumber = lineIndex + 1;
-            const isDimmed = highlightedLines !== null && !highlightedLines.has(lineNumber);
-            return (
-              <span
-                key={`token-line-${lineNumber}`}
-                className={isDimmed ? lineClassName : activeLineClassName}
-                style={{
-                  display: "block",
-                  opacity: isDimmed ? dimOpacity : 1,
-                  transition: highlightedLines
-                    ? `opacity ${animationDuration}ms ease`
-                    : undefined,
-                }}
-              >
-                {lineNumbers && (
-                  <span
-                    aria-hidden="true"
+      <code>
+        {tokens.tokens.map((lineTokens, lineIndex) => {
+          const lineNumber = lineIndex + 1;
+          const isDimmed = highlightedLines !== null && !highlightedLines.has(lineNumber);
+          return (
+            <span
+              key={`token-line-${lineNumber}`}
+              className={isDimmed ? lineClassName : activeLineClassName}
+              style={{
+                display: "block",
+                opacity: isDimmed ? dimOpacity : 1,
+                transition: highlightedLines ? `opacity ${animationDuration}ms ease` : undefined,
+              }}
+            >
+              {lineNumbers && (
+                <span
+                  aria-hidden="true"
                   style={{
                     display: "inline-block",
                     minWidth: "2.5em",
@@ -549,10 +519,7 @@ function TypewriterCode({
   );
 }
 
-function typewriterReducer(
-  state: TypewriterState,
-  action: TypewriterAction,
-): TypewriterState {
+function typewriterReducer(state: TypewriterState, action: TypewriterAction): TypewriterState {
   switch (action.type) {
     case "syncCode": {
       if (action.code === state.previousCode) {

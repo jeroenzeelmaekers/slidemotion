@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useMemo } from "react";
 import { PresentationContext } from "../core/context.js";
 
 // ---------------------------------------------------------------------------
@@ -29,8 +29,18 @@ export function useKeyboardNavigation(options?: {
   onSpeakerNotesToggle?: () => void;
   shortcuts?: Partial<KeyboardShortcuts>;
 }) {
-  const enabled = options?.enabled ?? true;
+  const {
+    enabled = true,
+    onOverviewToggle,
+    onFullscreenToggle,
+    onSpeakerNotesToggle,
+    shortcuts: shortcutOverrides,
+  } = options ?? {};
   const ctx = useContext(PresentationContext);
+  const shortcuts = useMemo(
+    () => ({ ...DEFAULT_SHORTCUTS, ...shortcutOverrides }),
+    [shortcutOverrides],
+  );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -46,7 +56,6 @@ export function useKeyboardNavigation(options?: {
         return;
       }
 
-      const shortcuts = { ...DEFAULT_SHORTCUTS, ...options?.shortcuts };
       const key = e.key;
 
       if (shortcuts.next.includes(key)) {
@@ -57,16 +66,16 @@ export function useKeyboardNavigation(options?: {
         ctx.dispatch({ type: "prev" });
       } else if (shortcuts.overview.includes(key)) {
         e.preventDefault();
-        options?.onOverviewToggle?.();
+        onOverviewToggle?.();
       } else if (shortcuts.fullscreen.includes(key)) {
         e.preventDefault();
-        options?.onFullscreenToggle?.();
+        onFullscreenToggle?.();
       } else if (shortcuts.speakerNotes.includes(key)) {
         e.preventDefault();
-        options?.onSpeakerNotesToggle?.();
+        onSpeakerNotesToggle?.();
       }
     },
-    [ctx, options],
+    [ctx, enabled, onFullscreenToggle, onOverviewToggle, onSpeakerNotesToggle, shortcuts],
   );
 
   useEffect(() => {

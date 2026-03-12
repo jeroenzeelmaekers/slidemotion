@@ -56,7 +56,12 @@ function renderActiveSlide(state: PresentationState, children: ReactNode) {
 describe("sparse step rendering", () => {
   it("shows the matching code snapshot for sparse atSteps", () => {
     const state: PresentationState = {
-      ...createInitialState({ width: 1920, height: 1080, defaultStepDuration: 300, defaultSlideTransition: "none" }),
+      ...createInitialState({
+        width: 1920,
+        height: 1080,
+        defaultStepDuration: 300,
+        defaultSlideTransition: "none",
+      }),
       currentSlide: 0,
       currentStep: 3,
     };
@@ -85,7 +90,12 @@ describe("sparse step rendering", () => {
     } as unknown as NonNullable<Parameters<typeof Code>[0]["highlighter"]>;
 
     const state: PresentationState = {
-      ...createInitialState({ width: 1920, height: 1080, defaultStepDuration: 300, defaultSlideTransition: "none" }),
+      ...createInitialState({
+        width: 1920,
+        height: 1080,
+        defaultStepDuration: 300,
+        defaultSlideTransition: "none",
+      }),
       currentSlide: 0,
       currentStep: 0,
     };
@@ -119,7 +129,12 @@ describe("sparse step rendering", () => {
     } as unknown as NonNullable<Parameters<typeof Code>[0]["highlighter"]>;
 
     const state: PresentationState = {
-      ...createInitialState({ width: 1920, height: 1080, defaultStepDuration: 300, defaultSlideTransition: "none" }),
+      ...createInitialState({
+        width: 1920,
+        height: 1080,
+        defaultStepDuration: 300,
+        defaultSlideTransition: "none",
+      }),
       currentSlide: 0,
       currentStep: 1,
     };
@@ -157,7 +172,12 @@ describe("sparse step rendering", () => {
     } as unknown as NonNullable<Parameters<typeof Code>[0]["highlighter"]>;
 
     const state: PresentationState = {
-      ...createInitialState({ width: 1920, height: 1080, defaultStepDuration: 300, defaultSlideTransition: "none" }),
+      ...createInitialState({
+        width: 1920,
+        height: 1080,
+        defaultStepDuration: 300,
+        defaultSlideTransition: "none",
+      }),
       currentSlide: 0,
       currentStep: 1,
     };
@@ -183,37 +203,41 @@ describe("sparse step rendering", () => {
 
   it("shows the expected number of sparse terminal entries", () => {
     const hiddenState: PresentationState = {
-      ...createInitialState({ width: 1920, height: 1080, defaultStepDuration: 300, defaultSlideTransition: "none" }),
+      ...createInitialState({
+        width: 1920,
+        height: 1080,
+        defaultStepDuration: 300,
+        defaultSlideTransition: "none",
+      }),
       currentSlide: 0,
       currentStep: 2,
     };
 
     const visibleState: PresentationState = {
-      ...createInitialState({ width: 1920, height: 1080, defaultStepDuration: 300, defaultSlideTransition: "none" }),
+      ...createInitialState({
+        width: 1920,
+        height: 1080,
+        defaultStepDuration: 300,
+        defaultSlideTransition: "none",
+      }),
       currentSlide: 0,
       currentStep: 4,
     };
 
     const hiddenHtml = renderActiveSlide(
       hiddenState,
-        <Terminal
-          steps={[
-            { command: "bun install" },
-            { command: "bun test", output: "109 passed" },
-          ]}
-          atSteps={atSteps(2, 4)}
-        />,
+      <Terminal
+        steps={[{ command: "bun install" }, { command: "bun test", output: "109 passed" }]}
+        atSteps={atSteps(2, 4)}
+      />,
     );
 
     const visibleHtml = renderActiveSlide(
       visibleState,
-        <Terminal
-          steps={[
-            { command: "bun install" },
-            { command: "bun test", output: "109 passed" },
-          ]}
-          atSteps={atSteps(2, 4)}
-        />,
+      <Terminal
+        steps={[{ command: "bun install" }, { command: "bun test", output: "109 passed" }]}
+        atSteps={atSteps(2, 4)}
+      />,
     );
 
     expect((hiddenHtml.match(/<span>\$<\/span>/g) ?? []).length).toBe(2);
@@ -222,7 +246,12 @@ describe("sparse step rendering", () => {
 
   it("keeps exiting step content mounted while moving backward", () => {
     const state: PresentationState = {
-      ...createInitialState({ width: 1920, height: 1080, defaultStepDuration: 300, defaultSlideTransition: "none" }),
+      ...createInitialState({
+        width: 1920,
+        height: 1080,
+        defaultStepDuration: 300,
+        defaultSlideTransition: "none",
+      }),
       currentSlide: 0,
       currentStep: 1,
       stepProgress: 0.4,

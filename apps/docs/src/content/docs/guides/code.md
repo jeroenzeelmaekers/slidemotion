@@ -59,10 +59,7 @@ import { atSteps, Code, Terminal, rangeStepOrders } from "slidemotion";
 
 ```tsx
 <Terminal
-  steps={[
-    { command: "bun install" },
-    { command: "bun test", output: "12 passed" },
-  ]}
+  steps={[{ command: "bun install" }, { command: "bun test", output: "12 passed" }]}
   atSteps={[2, 4]}
 />
 ```

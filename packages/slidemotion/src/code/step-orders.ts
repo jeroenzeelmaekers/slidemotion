@@ -2,10 +2,7 @@
 // Step order helpers for step-aware code components.
 // ---------------------------------------------------------------------------
 
-function assertPositiveIncreasing(
-  orders: readonly number[],
-  source: string,
-) {
+function assertPositiveIncreasing(orders: readonly number[], source: string) {
   for (let index = 0; index < orders.length; index++) {
     const order = orders[index];
     if (order === undefined || !Number.isInteger(order) || order < 1) {
@@ -19,10 +16,7 @@ function assertPositiveIncreasing(
   }
 }
 
-function sameOrders(
-  left: readonly number[],
-  right: readonly number[],
-): boolean {
+function sameOrders(left: readonly number[], right: readonly number[]): boolean {
   if (left.length !== right.length) {
     return false;
   }
@@ -42,17 +36,11 @@ export function atSteps(...orders: number[]): readonly number[] {
 }
 
 export function stepOrders(...orders: number[]): readonly number[] {
-  if (typeof process !== "undefined" && process.env.NODE_ENV !== "production") {
-    console.warn("[slidemotion] stepOrders(...) is a compatibility alias. Prefer atSteps(...).");
-  }
   assertPositiveIncreasing(orders, "stepOrders(...orders)");
   return orders;
 }
 
-export function rangeStepOrders(
-  start: number,
-  count: number,
-): readonly number[] {
+export function rangeStepOrders(start: number, count: number): readonly number[] {
   if (!Number.isInteger(start) || start < 1) {
     throw new Error("rangeStepOrders(start, count) start must be a positive integer");
   }
@@ -104,9 +92,7 @@ export function resolveStepAliases(
   }
 
   if (!sameOrders(atStepsProp, stepOrdersProp)) {
-    throw new Error(
-      `<${componentName}> atSteps and stepOrders must match when both are provided`,
-    );
+    throw new Error(`<${componentName}> atSteps and stepOrders must match when both are provided`);
   }
 
   return atStepsProp;
@@ -114,10 +100,10 @@ export function resolveStepAliases(
 
 export function countCompletedStepOrders(
   currentStep: number,
-  stepOrders: readonly number[],
+  orders: readonly number[],
 ): number {
   let completed = 0;
-  for (const order of stepOrders) {
+  for (const order of orders) {
     if (currentStep < order) {
       break;
     }

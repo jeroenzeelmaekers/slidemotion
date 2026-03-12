@@ -38,7 +38,13 @@ export { Stagger, type StaggerProps } from "./components/transitions/stagger.js"
 
 // Code
 export { Code } from "./code/code.js";
-export type { CodeProps, CodeClassNames, TerminalProps, TerminalClassNames, CodeRenderer } from "./code/types.js";
+export type {
+  CodeProps,
+  CodeClassNames,
+  TerminalProps,
+  TerminalClassNames,
+  CodeRenderer,
+} from "./code/types.js";
 export { Terminal } from "./code/terminal.js";
 export { initHighlighter } from "./code/highlighter.js";
 export { initHighlighterJavaScript } from "./code/highlighter-javascript.js";
@@ -88,6 +94,11 @@ export { createAnimationLoop, tweenMode, springMode } from "./animation/animatio
 // Theme
 export type { Theme } from "./theme/types.js";
 export { defineTheme } from "./theme/types.js";
-export { ThemeProvider, useTheme, useComponentTheme, type ThemeProviderProps } from "./theme/context.js";
+export {
+  ThemeProvider,
+  useTheme,
+  useComponentTheme,
+  type ThemeProviderProps,
+} from "./theme/context.js";
 export { mergeTheme } from "./theme/merge.js";
 export { defaultTheme } from "./theme/presets.js";

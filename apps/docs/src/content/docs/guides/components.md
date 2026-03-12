@@ -16,10 +16,7 @@ description: Core components for building presentations.
 Use `Presentation` for deck-level defaults:
 
 ```tsx
-<Presentation
-  defaultStepDuration={420}
-  defaultSlideTransition={{ type: "fade", duration: 220 }}
->
+<Presentation defaultStepDuration={420} defaultSlideTransition={{ type: "fade", duration: 220 }}>
   <Presenter>{/* slides */}</Presenter>
 </Presentation>
 ```
@@ -53,11 +50,7 @@ Slides must have an `id` and can override the deck transition:
 `Animate` supports `enter`, `animate`, and `exit` states.
 
 ```tsx
-<Animate
-  enter={{ opacity: 0, y: 24 }}
-  animate={{ opacity: 1, y: 0 }}
-  exit={{ opacity: 0, y: -16 }}
->
+<Animate enter={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
   <h2>Animated</h2>
 </Animate>
 ```

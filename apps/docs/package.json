@@ -6,11 +6,19 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "format": "oxfmt -c ../../.oxfmtrc.json \"src/**/*.{ts,tsx,js,jsx,mjs,cjs,astro}\" \"astro.config.mjs\"",
+    "format:check": "oxfmt --check -c ../../.oxfmtrc.json \"src/**/*.{ts,tsx,js,jsx,mjs,cjs,astro}\" \"astro.config.mjs\"",
+    "lint": "oxlint -c ../../.oxlintrc.json .",
+    "lint:fix": "oxlint --fix -c ../../.oxlintrc.json .",
     "preview": "astro preview"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.37.6",
     "astro": "^5.18.0",
     "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.39.0",
+    "oxlint": "^1.54.0"
   }
 }

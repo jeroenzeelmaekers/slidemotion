@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "format": "oxfmt -c ../../.oxfmtrc.json \"src/**/*.{ts,tsx,js,jsx,mjs,cjs}\" \"vite.config.ts\"",
+    "format:check": "oxfmt --check -c ../../.oxfmtrc.json \"src/**/*.{ts,tsx,js,jsx,mjs,cjs}\" \"vite.config.ts\"",
+    "lint": "oxlint -c ../../.oxlintrc.json .",
+    "lint:fix": "oxlint --fix -c ../../.oxlintrc.json .",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,6 +25,8 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
+    "oxfmt": "^0.39.0",
+    "oxlint": "^1.54.0",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"

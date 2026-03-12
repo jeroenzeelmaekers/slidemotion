@@ -18,13 +18,7 @@ export type ScaleInProps = {
   readonly className?: string;
 };
 
-export function ScaleIn({
-  children,
-  from = 0.8,
-  exitTo = from,
-  style,
-  className,
-}: ScaleInProps) {
+export function ScaleIn({ children, from = 0.8, exitTo = from, style, className }: ScaleInProps) {
   const themeSlot = useComponentTheme("ScaleIn");
   const resolvedClassName = mergeClassName(themeSlot?.className, className);
 

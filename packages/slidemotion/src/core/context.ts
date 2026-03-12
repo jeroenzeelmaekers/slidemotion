@@ -1,11 +1,6 @@
 import { createContext } from "react";
 import type { ReactNode } from "react";
-import type {
-  PresentationState,
-  PresentationAction,
-  Direction,
-  SlideTransition,
-} from "./types.js";
+import type { PresentationState, PresentationAction, Direction, SlideTransition } from "./types.js";
 import type { StepRegistry } from "./step-registry.js";
 
 // ---------------------------------------------------------------------------

@@ -31,17 +31,11 @@ export function mergeClassNames<T extends Readonly<Record<string, string | undef
   if (!themeClassNames) return propClassNames;
   if (!propClassNames) return themeClassNames;
 
-  const allKeys = new Set([
-    ...Object.keys(themeClassNames),
-    ...Object.keys(propClassNames),
-  ]);
+  const allKeys = new Set([...Object.keys(themeClassNames), ...Object.keys(propClassNames)]);
 
   const result: Record<string, string | undefined> = {};
   for (const key of allKeys) {
-    result[key] = mergeClassName(
-      themeClassNames[key],
-      propClassNames[key],
-    );
+    result[key] = mergeClassName(themeClassNames[key], propClassNames[key]);
   }
 
   return result as T;
@@ -58,10 +52,7 @@ export function mergeClassNames<T extends Readonly<Record<string, string | undef
  */
 export function mergeTheme(base: Theme, overrides: Theme): Theme {
   const merged: Record<string, unknown> = {};
-  const allKeys = new Set([
-    ...Object.keys(base),
-    ...Object.keys(overrides),
-  ]);
+  const allKeys = new Set([...Object.keys(base), ...Object.keys(overrides)]);
 
   for (const key of allKeys) {
     const k = key as keyof Theme;
@@ -78,12 +69,15 @@ export function mergeTheme(base: Theme, overrides: Theme): Theme {
         className: mergeClassName(baseSlot.className, overrideSlot.className),
       };
 
-      const baseClassNames = "classNames" in baseSlot
-        ? (baseSlot as { classNames?: Readonly<Record<string, string | undefined>> }).classNames
-        : undefined;
-      const overrideClassNames = "classNames" in overrideSlot
-        ? (overrideSlot as { classNames?: Readonly<Record<string, string | undefined>> }).classNames
-        : undefined;
+      const baseClassNames =
+        "classNames" in baseSlot
+          ? (baseSlot as { classNames?: Readonly<Record<string, string | undefined>> }).classNames
+          : undefined;
+      const overrideClassNames =
+        "classNames" in overrideSlot
+          ? (overrideSlot as { classNames?: Readonly<Record<string, string | undefined>> })
+              .classNames
+          : undefined;
 
       if (baseClassNames ?? overrideClassNames) {
         mergedSlot.classNames = mergeClassNames(baseClassNames, overrideClassNames);

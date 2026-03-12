@@ -124,21 +124,19 @@ function simulateSpring(
     const A = x0;
     const B = (v0 + zeta * omega0 * x0) / omegaD;
 
-    position =
-      1 + expTerm * (A * Math.cos(omegaD * t) + B * Math.sin(omegaD * t));
+    position = 1 + expTerm * (A * Math.cos(omegaD * t) + B * Math.sin(omegaD * t));
     velocity =
       expTerm *
-        ((B * omegaD - A * zeta * omega0) * Math.cos(omegaD * t) -
-          (A * omegaD + B * zeta * omega0) * Math.sin(omegaD * t));
+      ((B * omegaD - A * zeta * omega0) * Math.cos(omegaD * t) -
+        (A * omegaD + B * zeta * omega0) * Math.sin(omegaD * t));
   } else if (zeta === 1) {
     // Critically damped: fastest without oscillation
     const expTerm = Math.exp(-omega0 * t);
     position = 1 + expTerm * (x0 + (v0 + omega0 * x0) * t);
-    velocity =
-      expTerm * (v0 - (v0 + omega0 * x0) * omega0 * t + (v0 + omega0 * x0));
+    velocity = expTerm * (v0 - (v0 + omega0 * x0) * omega0 * t + (v0 + omega0 * x0));
     // Simplified: velocity = expTerm * ((v0 + omega0 * x0) * (1 - omega0 * t) + v0)
     // Actually: d/dt[e^(-ω₀t)(x₀ + (v₀ + ω₀x₀)t)]
-    velocity = expTerm * ((v0 + omega0 * x0) - omega0 * (x0 + (v0 + omega0 * x0) * t));
+    velocity = expTerm * (v0 + omega0 * x0 - omega0 * (x0 + (v0 + omega0 * x0) * t));
   } else {
     // Overdamped: slow return without oscillation
     const s1 = -omega0 * (zeta - Math.sqrt(zeta * zeta - 1));

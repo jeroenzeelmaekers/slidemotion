@@ -1,10 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useId,
-  useMemo,
-  type ReactNode,
-} from "react";
+import { useContext, useEffect, useId, useMemo, type ReactNode } from "react";
 import {
   PresentationContext,
   SlideContext,
@@ -55,19 +49,18 @@ export function Step({ children, order, duration }: StepProps) {
   const direction = state.direction;
 
   const isExiting =
-    direction === "backward" &&
-    state.animationStatus === "running" &&
-    currentStep + 1 === order;
+    direction === "backward" && state.animationStatus === "running" && currentStep + 1 === order;
   const isActive = currentStep === order;
   const isVisible = currentStep >= order || isExiting;
 
-  const status = isActive && state.animationStatus === "running"
-    ? "entering"
-    : isExiting
-    ? "exiting"
-    : isVisible
-    ? "visible"
-    : "hidden";
+  const status =
+    isActive && state.animationStatus === "running"
+      ? "entering"
+      : isExiting
+        ? "exiting"
+        : isVisible
+          ? "visible"
+          : "hidden";
 
   // Progress for this specific step:
   // - If this step is currently animating in: use stepProgress
@@ -99,9 +92,5 @@ export function Step({ children, order, duration }: StepProps) {
     return null;
   }
 
-  return (
-    <StepContext.Provider value={contextValue}>
-      {children}
-    </StepContext.Provider>
-  );
+  return <StepContext.Provider value={contextValue}>{children}</StepContext.Provider>;
 }

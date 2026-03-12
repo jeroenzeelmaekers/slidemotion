@@ -221,10 +221,7 @@ export const orangeJuiceLight: ThemeRegistrationRaw = {
     },
     {
       name: "meta.method.js",
-      scope: [
-        "meta.class-method.js entity.name.function.js",
-        "variable.function.constructor",
-      ],
+      scope: ["meta.class-method.js entity.name.function.js", "variable.function.constructor"],
       settings: { foreground: "#1A8E7D" },
     },
     {
@@ -242,10 +239,7 @@ export const orangeJuiceLight: ThemeRegistrationRaw = {
     },
     {
       name: "CSS Classes",
-      scope: [
-        "entity.other.attribute-name.class",
-        "punctuation.definition.entity.css",
-      ],
+      scope: ["entity.other.attribute-name.class", "punctuation.definition.entity.css"],
       settings: { foreground: "#ff8c00" },
     },
     {
@@ -294,16 +288,12 @@ export const orangeJuiceLight: ThemeRegistrationRaw = {
     },
     {
       name: "ES7 Bind Operator",
-      scope: [
-        "source.js constant.other.object.key.js string.unquoted.label.js",
-      ],
+      scope: ["source.js constant.other.object.key.js string.unquoted.label.js"],
       settings: { foreground: "#C03030" },
     },
     {
       name: "JSON Key",
-      scope: [
-        "source.json meta.structure.dictionary.json support.type.property-name.json",
-      ],
+      scope: ["source.json meta.structure.dictionary.json support.type.property-name.json"],
       settings: { foreground: "#ff8c00" },
     },
     {

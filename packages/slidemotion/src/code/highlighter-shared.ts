@@ -1,9 +1,4 @@
-import type {
-  HighlighterCore,
-  LanguageInput,
-  RegexEngine,
-  ThemeRegistrationRaw,
-} from "shiki";
+import type { HighlighterCore, LanguageInput, RegexEngine, ThemeRegistrationRaw } from "shiki";
 import { createCssVariablesTheme, createHighlighterCore } from "shiki/core";
 
 export type HighlighterEngine = "oniguruma" | "javascript";
@@ -45,7 +40,7 @@ export async function initSharedHighlighter(options: {
 
   initPromise = (async () => {
     try {
-      const [regexEngine] = await Promise.all([options.createEngine()]);
+      const regexEngine = await options.createEngine();
 
       const cssVarsTheme = createCssVariablesTheme({
         name: SM_CODE_THEME,

@@ -8,9 +8,7 @@ export function StepsSlide() {
 
         <Step order={1}>
           <FadeIn>
-            <p className="text-2xl text-sm-muted-foreground">
-              Each step reveals on next -&gt;
-            </p>
+            <p className="text-2xl text-sm-muted-foreground">Each step reveals on next -&gt;</p>
           </FadeIn>
         </Step>
 

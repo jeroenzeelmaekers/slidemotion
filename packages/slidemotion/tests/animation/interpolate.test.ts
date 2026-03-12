@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { interpolate } from "../../src/animation/interpolate.js";
-import { linear, quad, easeInOut } from "../../src/animation/easing.js";
+import { quad } from "../../src/animation/easing.js";
 
 describe("interpolate", () => {
   it("maps value linearly between two ranges", () => {

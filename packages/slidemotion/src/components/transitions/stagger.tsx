@@ -1,10 +1,4 @@
-import {
-  Children,
-  isValidElement,
-  useContext,
-  type ReactNode,
-  type ReactElement,
-} from "react";
+import { Children, isValidElement, useContext, type ReactNode, type ReactElement } from "react";
 import { StepContext, PresentationContext } from "../../core/context.js";
 import { interpolate } from "../../animation/interpolate.js";
 
@@ -42,12 +36,10 @@ export function Stagger({ children, interval = 0.12, y = 10 }: StaggerProps) {
         const available = Math.max(1 - totalOffset, 0.0001);
         const start = Math.min(i * interval, 1);
         const end = Math.min(start + available, 1);
-        const childProgress = interpolate(
-          progress,
-          [start, end],
-          [0, 1],
-          { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-        );
+        const childProgress = interpolate(progress, [start, end], [0, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        });
 
         return (
           <StaggeredChild key={getChildKey(child, i)} progress={childProgress} y={y}>

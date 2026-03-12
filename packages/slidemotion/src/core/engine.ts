@@ -63,7 +63,8 @@ export function presentationReducer(
           currentStep: nextStep,
           stepProgress: 0,
           activeStepDuration:
-            stepRegistry.getStepDuration(state.currentSlide, nextStep) ?? state.config.defaultStepDuration,
+            stepRegistry.getStepDuration(state.currentSlide, nextStep) ??
+            state.config.defaultStepDuration,
           direction: "forward",
           animationStatus: "running",
         };
@@ -103,7 +104,8 @@ export function presentationReducer(
           currentStep: nextStep,
           stepProgress: 1,
           activeStepDuration:
-            stepRegistry.getStepDuration(state.currentSlide, nextStep) ?? state.config.defaultStepDuration,
+            stepRegistry.getStepDuration(state.currentSlide, nextStep) ??
+            state.config.defaultStepDuration,
           direction: "backward",
           animationStatus: "idle",
         };
@@ -123,7 +125,8 @@ export function presentationReducer(
           currentStep: prevMaxStep,
           stepProgress: 1,
           activeStepDuration:
-            stepRegistry.getStepDuration(prevSlide, prevMaxStep) ?? state.config.defaultStepDuration,
+            stepRegistry.getStepDuration(prevSlide, prevMaxStep) ??
+            state.config.defaultStepDuration,
           direction: "backward",
           animationStatus: hasTransition ? "running" : "idle",
           previousSlide: hasTransition ? state.currentSlide : null,
@@ -137,9 +140,7 @@ export function presentationReducer(
     case "goTo": {
       const slide = Math.max(0, Math.min(action.slide, slideCount - 1));
       const maxStep = stepRegistry.getMaxStep(slide);
-      const step = action.step !== undefined
-        ? Math.max(0, Math.min(action.step, maxStep))
-        : 0;
+      const step = action.step !== undefined ? Math.max(0, Math.min(action.step, maxStep)) : 0;
 
       return {
         ...state,

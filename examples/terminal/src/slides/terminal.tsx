@@ -14,9 +14,7 @@ export function TerminalSlide() {
     <Slide id="terminal" className="flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center gap-6 p-16">
         <h2 className="text-4xl font-semibold">Terminal</h2>
-        <p className="text-xl text-sm-muted-foreground">
-          typing animation with output reveal
-        </p>
+        <p className="text-xl text-sm-muted-foreground">typing animation with output reveal</p>
         <div className="w-full max-w-250">
           <Terminal
             title="Install React"
@@ -24,8 +22,7 @@ export function TerminalSlide() {
             typingSpeed={30}
             className="rounded-xl overflow-hidden text-3xl leading-relaxed bg-sm-surface text-sm-surface-foreground shadow-xl shadow-black/8 border border-sm-border font-mono"
             classNames={{
-              chrome:
-                "flex items-center gap-2 px-3 py-2 bg-sm-muted border-b border-sm-border",
+              chrome: "flex items-center gap-2 px-3 py-2 bg-sm-muted border-b border-sm-border",
               dots: "flex gap-1.5",
               dotClose: "w-3 h-3 rounded-full bg-[#ff5f56]",
               dotMinimize: "w-3 h-3 rounded-full bg-[#ffbd2e]",

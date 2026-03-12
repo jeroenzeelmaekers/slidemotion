@@ -1,18 +1,9 @@
-import {
-  useContext,
-  useEffect,
-  useId,
-  useReducer,
-} from "react";
+import { useContext, useEffect, useId, useReducer } from "react";
 import { PresentationContext, SlideContext } from "../core/context.js";
 import type { TerminalProps } from "./types.js";
 import { useComponentTheme } from "../theme/context.js";
 import { mergeClassName, mergeClassNames } from "../theme/merge.js";
-import {
-  countCompletedStepOrders,
-  resolveStepAliases,
-  resolveStepOrders,
-} from "./step-orders.js";
+import { countCompletedStepOrders, resolveStepAliases, resolveStepOrders } from "./step-orders.js";
 
 // ---------------------------------------------------------------------------
 // <Terminal>
@@ -46,11 +37,7 @@ export function Terminal({
   const { stepRegistry, state } = presCtx;
   const { index: slideIndex } = slideCtx;
 
-  const resolvedExplicitStepOrders = resolveStepAliases(
-    atSteps,
-    explicitStepOrders,
-    "Terminal",
-  );
+  const resolvedExplicitStepOrders = resolveStepAliases(atSteps, explicitStepOrders, "Terminal");
 
   const stepOrders = resolveStepOrders(
     steps.length,
@@ -146,7 +133,7 @@ function TerminalEntry({
       commandLength: command.length,
       hasOutput: output !== undefined,
     });
-  }, [isLatest, command.length]);
+  }, [isLatest, command.length, output]);
 
   // Typewriter effect for the command
   useEffect(() => {

@@ -7,10 +7,7 @@ import { orangeTheme } from "./themes/orange.js";
 
 export function App() {
   return (
-    <Presentation
-      theme={orangeTheme}
-      defaultSlideTransition={{ type: "fade", duration: 220 }}
-    >
+    <Presentation theme={orangeTheme} defaultSlideTransition={{ type: "fade", duration: 220 }}>
       <Presenter devtools>
         <IntroSlide />
         <StepsSlide />

@@ -55,9 +55,7 @@ export default defineConfig({
         },
         {
           label: "API Reference",
-          items: [
-            { label: "Overview", slug: "api/overview" },
-          ],
+          items: [{ label: "Overview", slug: "api/overview" }],
         },
       ],
     }),

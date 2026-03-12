@@ -24,12 +24,7 @@ export type SlideProps = {
   readonly transition?: SlideTransition | undefined;
 };
 
-export function Slide({
-  children,
-  id,
-  className,
-  transition,
-}: SlideProps) {
+export function Slide({ children, id, className, transition }: SlideProps) {
   const presCtx = useContext(PresentationContext);
   if (!presCtx) {
     throw new Error("<Slide> must be used within <Presentation>");
@@ -65,7 +60,12 @@ export function Slide({
 
   // Compute transition styles
   const transitionStyle = isTransitioning
-    ? computeTransitionStyle(resolvedTransition, state.slideTransitionProgress, state.direction, isActive)
+    ? computeTransitionStyle(
+        resolvedTransition,
+        state.slideTransitionProgress,
+        state.direction,
+        isActive,
+      )
     : undefined;
 
   return (
@@ -143,7 +143,5 @@ function computePushOffset(
     pct = baseSign * progress * 100;
   }
 
-  return axis === "x"
-    ? { x: `${pct}%`, y: "0" }
-    : { x: "0", y: `${pct}%` };
+  return axis === "x" ? { x: `${pct}%`, y: "0" } : { x: "0", y: `${pct}%` };
 }

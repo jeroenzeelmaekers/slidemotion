@@ -1,5 +1,13 @@
 export { Code } from "./code.js";
-export type { CodeProps, CodeClassNames, TerminalProps, TerminalClassNames, TerminalStepDef, ThemeRegistrationRaw, CodeRenderer } from "./types.js";
+export type {
+  CodeProps,
+  CodeClassNames,
+  TerminalProps,
+  TerminalClassNames,
+  TerminalStepDef,
+  ThemeRegistrationRaw,
+  CodeRenderer,
+} from "./types.js";
 export { Terminal } from "./terminal.js";
 export { initHighlighter } from "./highlighter.js";
 export { initHighlighterJavaScript } from "./highlighter-javascript.js";

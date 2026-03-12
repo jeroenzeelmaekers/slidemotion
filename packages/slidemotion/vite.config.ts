@@ -14,10 +14,7 @@ export default defineConfig({
     {
       name: "copy-styles",
       closeBundle() {
-        copyFileSync(
-          resolve(__dirname, "styles.css"),
-          resolve(__dirname, "dist/styles.css"),
-        );
+        copyFileSync(resolve(__dirname, "styles.css"), resolve(__dirname, "dist/styles.css"));
       },
     },
   ],

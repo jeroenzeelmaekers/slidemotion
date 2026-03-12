@@ -21,7 +21,11 @@ export type SlideTransition =
   | "none"
   | "fade"
   | { readonly type: "fade"; readonly duration?: number }
-  | { readonly type: "push"; readonly direction: SlideTransitionDirection; readonly duration?: number };
+  | {
+      readonly type: "push";
+      readonly direction: SlideTransitionDirection;
+      readonly duration?: number;
+    };
 
 export type SlideTransitionDirection = "left" | "right" | "up" | "down";
 
@@ -37,11 +41,10 @@ export type SlideDefinition = {
 // ---------------------------------------------------------------------------
 
 export type StepState =
-  | "hidden"   // step has not been reached yet
+  | "hidden" // step has not been reached yet
   | "entering" // step is animating in (progress 0→1)
-  | "visible"  // step animation complete, fully visible
-  | "exiting"  // step is animating out (going backward)
-  ;
+  | "visible" // step animation complete, fully visible
+  | "exiting"; // step is animating out (going backward)
 
 // ---------------------------------------------------------------------------
 // Events
@@ -92,10 +95,7 @@ export type AnimationMode =
   | { readonly type: "tween"; readonly duration: number; readonly easing: EasingFunction }
   | { readonly type: "spring"; readonly config: SpringConfig };
 
-export type AnimationStatus =
-  | "idle"
-  | "running"
-  | "completed";
+export type AnimationStatus = "idle" | "running" | "completed";
 
 // ---------------------------------------------------------------------------
 // Navigation direction

@@ -1,7 +1,5 @@
 import type { HighlighterCore, LanguageInput, ThemeRegistrationRaw } from "shiki";
-import {
-  initSharedHighlighter,
-} from "./highlighter-shared.js";
+import { initSharedHighlighter } from "./highlighter-shared.js";
 export { getSharedHighlighter, SM_CODE_THEME } from "./highlighter-shared.js";
 
 /**

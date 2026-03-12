@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "format": "oxfmt -c ../../.oxfmtrc.json \"src/**/*.{ts,tsx,js,jsx,mjs,cjs,astro}\" \"astro.config.mjs\"",
+    "format:check": "oxfmt --check -c ../../.oxfmtrc.json \"src/**/*.{ts,tsx,js,jsx,mjs,cjs,astro}\" \"astro.config.mjs\"",
+    "lint": "oxlint -c ../../.oxlintrc.json .",
+    "lint:fix": "oxlint --fix -c ../../.oxlintrc.json .",
     "preview": "astro preview",
     "typecheck": "astro check"
   },
@@ -15,6 +19,8 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "@tailwindcss/vite": "^4.2.1",
+    "oxfmt": "^0.39.0",
+    "oxlint": "^1.54.0",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
   }

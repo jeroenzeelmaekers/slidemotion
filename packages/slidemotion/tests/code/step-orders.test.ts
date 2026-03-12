@@ -14,9 +14,7 @@ describe("atSteps", () => {
   });
 
   it("throws for non-increasing orders", () => {
-    expect(() => atSteps(1, 1)).toThrow(
-      "atSteps(...orders) must be strictly increasing",
-    );
+    expect(() => atSteps(1, 1)).toThrow("atSteps(...orders) must be strictly increasing");
   });
 });
 
@@ -26,9 +24,7 @@ describe("stepOrders", () => {
   });
 
   it("throws for non-increasing orders", () => {
-    expect(() => stepOrders(1, 1)).toThrow(
-      "stepOrders(...orders) must be strictly increasing",
-    );
+    expect(() => stepOrders(1, 1)).toThrow("stepOrders(...orders) must be strictly increasing");
   });
 });
 

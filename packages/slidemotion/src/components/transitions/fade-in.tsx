@@ -15,12 +15,7 @@ export type FadeInProps = {
   readonly exitOpacity?: number;
 };
 
-export function FadeIn({
-  children,
-  style,
-  className,
-  exitOpacity = 0,
-}: FadeInProps) {
+export function FadeIn({ children, style, className, exitOpacity = 0 }: FadeInProps) {
   const themeSlot = useComponentTheme("FadeIn");
   const resolvedClassName = mergeClassName(themeSlot?.className, className);
 

@@ -1,0 +1,48 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "oxc", "typescript", "react", "import", "vitest", "jsx-a11y", "unicorn"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "env": {
+    "builtin": true,
+    "browser": true,
+    "node": true,
+    "es2024": true
+  },
+  "settings": {
+    "react": {
+      "version": "19.2.0"
+    },
+    "vitest": {
+      "typecheck": false
+    }
+  },
+  "ignorePatterns": [
+    "node_modules/**",
+    "dist/**",
+    "coverage/**",
+    ".astro/**",
+    "**/*.d.ts",
+    "**/*.gen.*",
+    "**/*.generated.*"
+  ],
+  "rules": {
+    "eqeqeq": "warn",
+    "no-console": "warn",
+    "import/no-cycle": "error",
+    "import/no-unassigned-import": "off",
+    "react/jsx-key": "error",
+    "react/react-in-jsx-scope": "off",
+    "typescript/no-explicit-any": "error"
+  },
+  "overrides": [
+    {
+      "files": ["packages/slidemotion/tests/**/*.{ts,tsx}"],
+      "rules": {
+        "typescript/no-explicit-any": "off"
+      }
+    }
+  ]
+}

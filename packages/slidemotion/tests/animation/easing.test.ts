@@ -63,9 +63,6 @@ describe("easing", () => {
   });
 
   it("back overshoots past 1 at some point", () => {
-    // back easing goes slightly past 0 at the start
-    const mid = back()(0.5);
-    // At t=1 it should be 1, but at some midpoint it may be negative
     expect(back()(0.1)).toBeLessThan(0);
   });
 

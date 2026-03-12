@@ -1,13 +1,11 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  type ReactNode,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { useSyncExternalStore } from "react";
 import type { PresentationConfig, PresentationAction, SlideTransition } from "../core/types.js";
-import { createInitialState, presentationReducer, resolveSlideTransitionDuration } from "../core/engine.js";
+import {
+  createInitialState,
+  presentationReducer,
+  resolveSlideTransitionDuration,
+} from "../core/engine.js";
 import { createStepRegistry, type StepRegistry } from "../core/step-registry.js";
 import {
   PresentationContext,
@@ -15,10 +13,7 @@ import {
   type SlideTransitionRegistry,
   type SpeakerNotesRegistry,
 } from "../core/context.js";
-import {
-  createAnimationLoop,
-  tweenMode,
-} from "../animation/animation-loop.js";
+import { createAnimationLoop, tweenMode } from "../animation/animation-loop.js";
 import { linear } from "../animation/easing.js";
 import type { Theme } from "../theme/types.js";
 import { ThemeProvider } from "../theme/context.js";
@@ -64,17 +59,20 @@ export function Presentation({
 
   // -- Slide transition registry --
   const slideTransitionsRef = useRef<Map<number, SlideTransition>>(new Map());
-  const slideTransitionRegistry: SlideTransitionRegistry = useMemo(() => ({
-    register: (slideIndex: number, transition: SlideTransition) => {
-      slideTransitionsRef.current.set(slideIndex, transition);
-    },
-    unregister: (slideIndex: number) => {
-      slideTransitionsRef.current.delete(slideIndex);
-    },
-    get: (slideIndex: number): SlideTransition => {
-      return slideTransitionsRef.current.get(slideIndex) ?? config.defaultSlideTransition;
-    },
-  }), [config.defaultSlideTransition]);
+  const slideTransitionRegistry: SlideTransitionRegistry = useMemo(
+    () => ({
+      register: (slideIndex: number, transition: SlideTransition) => {
+        slideTransitionsRef.current.set(slideIndex, transition);
+      },
+      unregister: (slideIndex: number) => {
+        slideTransitionsRef.current.delete(slideIndex);
+      },
+      get: (slideIndex: number): SlideTransition => {
+        return slideTransitionsRef.current.get(slideIndex) ?? config.defaultSlideTransition;
+      },
+    }),
+    [config.defaultSlideTransition],
+  );
 
   const getSlideTransition = useCallback(
     (slideIndex: number) => slideTransitionRegistry.get(slideIndex),
@@ -82,17 +80,20 @@ export function Presentation({
   );
 
   const speakerNotesRef = useRef(new Map<number, ReactNode>());
-  const speakerNotesRegistry: SpeakerNotesRegistry = useMemo(() => ({
-    register: (slideIndex: number, notes: ReactNode) => {
-      speakerNotesRef.current.set(slideIndex, notes);
-    },
-    unregister: (slideIndex: number) => {
-      speakerNotesRef.current.delete(slideIndex);
-    },
-    get: (slideIndex: number) => {
-      return speakerNotesRef.current.get(slideIndex) ?? null;
-    },
-  }), []);
+  const speakerNotesRegistry: SpeakerNotesRegistry = useMemo(
+    () => ({
+      register: (slideIndex: number, notes: ReactNode) => {
+        speakerNotesRef.current.set(slideIndex, notes);
+      },
+      unregister: (slideIndex: number) => {
+        speakerNotesRef.current.delete(slideIndex);
+      },
+      get: (slideIndex: number) => {
+        return speakerNotesRef.current.get(slideIndex) ?? null;
+      },
+    }),
+    [],
+  );
 
   // -- State management --
   const stateRef = useRef(createInitialState(config));
@@ -132,85 +133,89 @@ export function Presentation({
   const stepLoopRef = useRef<ReturnType<typeof createAnimationLoop> | null>(null);
   const slideLoopRef = useRef<ReturnType<typeof createAnimationLoop> | null>(null);
 
-  const dispatch = useCallback((action: PresentationAction) => {
-    const prev = stateRef.current;
-    const next = presentationReducer(
-      prev,
-      action,
-      stepRegistry,
-      slideCountRef.current,
-      getSlideTransition,
-    );
+  const dispatch = useCallback(
+    (action: PresentationAction) => {
+      const prev = stateRef.current;
+      const next = presentationReducer(
+        prev,
+        action,
+        stepRegistry,
+        slideCountRef.current,
+        getSlideTransition,
+      );
 
-    if (next !== prev) {
-      stateRef.current = next;
-      renderRef.current++;
+      if (next !== prev) {
+        stateRef.current = next;
+        renderRef.current++;
 
-      for (const cb of forceRenderCallbacks.current) {
-        cb();
-      }
+        for (const cb of forceRenderCallbacks.current) {
+          cb();
+        }
 
-      // Slide transition just started
-      if (
-        next.previousSlide !== null &&
-        prev.previousSlide === null &&
-        next.animationStatus === "running"
-      ) {
-        const transitionSlide = next.direction === "forward"
-          ? next.currentSlide
-          : prev.currentSlide;
-        const transition = getSlideTransition(transitionSlide);
-        const duration = resolveSlideTransitionDuration(transition);
+        // Slide transition just started
+        if (
+          next.previousSlide !== null &&
+          prev.previousSlide === null &&
+          next.animationStatus === "running"
+        ) {
+          const transitionSlide =
+            next.direction === "forward" ? next.currentSlide : prev.currentSlide;
+          const transition = getSlideTransition(transitionSlide);
+          const duration = resolveSlideTransitionDuration(transition);
 
-        if (duration > 0) {
-          if (!slideLoopRef.current) {
-            slideLoopRef.current = createAnimationLoop({
+          if (duration > 0) {
+            if (!slideLoopRef.current) {
+              slideLoopRef.current = createAnimationLoop({
+                onProgress: (progress) => {
+                  dispatch({ type: "updateSlideTransition", progress });
+                },
+                onComplete: () => {
+                  dispatch({ type: "completeSlideTransition" });
+                },
+              });
+            }
+
+            const mode = tweenMode(duration, linear);
+            slideLoopRef.current.start(mode);
+            return;
+          }
+        }
+
+        // Step animation just started (only if no slide transition is active)
+        if (
+          next.animationStatus === "running" &&
+          prev.animationStatus !== "running" &&
+          next.previousSlide === null
+        ) {
+          if (!stepLoopRef.current) {
+            stepLoopRef.current = createAnimationLoop({
               onProgress: (progress) => {
-                dispatch({ type: "updateSlideTransition", progress });
+                dispatch({ type: "updateStepProgress", progress });
               },
               onComplete: () => {
-                dispatch({ type: "completeSlideTransition" });
+                dispatch({ type: "completeAnimation" });
               },
             });
           }
 
-          const mode = tweenMode(duration, linear);
-          slideLoopRef.current.start(mode);
-          return;
+          const mode = tweenMode(next.activeStepDuration, linear);
+          if (next.direction === "forward") {
+            stepLoopRef.current.start(mode);
+          } else {
+            stepLoopRef.current.startReverse(mode);
+          }
         }
       }
-
-      // Step animation just started (only if no slide transition is active)
-      if (
-        next.animationStatus === "running" &&
-        prev.animationStatus !== "running" &&
-        next.previousSlide === null
-      ) {
-        if (!stepLoopRef.current) {
-          stepLoopRef.current = createAnimationLoop({
-            onProgress: (progress) => {
-              dispatch({ type: "updateStepProgress", progress });
-            },
-            onComplete: () => {
-              dispatch({ type: "completeAnimation" });
-            },
-          });
-        }
-
-        const mode = tweenMode(next.activeStepDuration, linear);
-        if (next.direction === "forward") {
-          stepLoopRef.current.start(mode);
-        } else {
-          stepLoopRef.current.startReverse(mode);
-        }
-      }
-    }
-  }, [stepRegistry, getSlideTransition]);
+    },
+    [stepRegistry, getSlideTransition],
+  );
 
   // Force re-render hook using useSyncExternalStore
   const subscribe = useCallback((cb: () => void) => {
     forceRenderCallbacks.current.add(cb);
-    return () => { forceRenderCallbacks.current.delete(cb); };
+    return () => {
+      forceRenderCallbacks.current.delete(cb);
+    };
   }, []);
 
   useSyncExternalStore(
@@ -230,10 +235,15 @@ export function Presentation({
   // -- Slide index counter (reset each render, read by <Slide>) --
   const slideIndexRef = useRef(0);
   slideIndexRef.current = 0;
-  const slideIndexCounter = useMemo(() => ({
-    next: () => slideIndexRef.current++,
-    get count() { return slideIndexRef.current; },
-  }), []);
+  const slideIndexCounter = useMemo(
+    () => ({
+      next: () => slideIndexRef.current++,
+      get count() {
+        return slideIndexRef.current;
+      },
+    }),
+    [],
+  );
 
   const contextValue: PresentationContextValue = useMemo(
     () => ({
@@ -253,14 +263,11 @@ export function Presentation({
       slideTransitionRegistry,
       slideIndexCounter,
       speakerNotesRegistry,
-      renderRef.current,
     ],
   );
 
   const content = (
-    <PresentationContext.Provider value={contextValue}>
-      {children}
-    </PresentationContext.Provider>
+    <PresentationContext.Provider value={contextValue}>{children}</PresentationContext.Provider>
   );
 
   if (theme === false) {

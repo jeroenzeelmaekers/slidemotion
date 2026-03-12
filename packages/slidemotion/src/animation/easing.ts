@@ -18,8 +18,7 @@ export const quint: EasingFunction = (t) => t * t * t * t * t;
 
 export const sin: EasingFunction = (t) => 1 - Math.cos((t * Math.PI) / 2);
 
-export const exp: EasingFunction = (t) =>
-  t === 0 ? 0 : Math.pow(2, 10 * (t - 1));
+export const exp: EasingFunction = (t) => (t === 0 ? 0 : Math.pow(2, 10 * (t - 1)));
 
 export const circle: EasingFunction = (t) => 1 - Math.sqrt(1 - t * t);
 
@@ -27,8 +26,10 @@ export const circle: EasingFunction = (t) => 1 - Math.sqrt(1 - t * t);
  * Back easing — overshoots slightly then settles.
  * `s` controls overshoot magnitude (default 1.70158 ≈ 10% overshoot).
  */
-export const back = (s: number = 1.70158): EasingFunction =>
-  (t) => t * t * ((s + 1) * t - s);
+export const back =
+  (s: number = 1.70158): EasingFunction =>
+  (t) =>
+    t * t * ((s + 1) * t - s);
 
 /**
  * Elastic easing — spring-like bounce.
@@ -37,9 +38,7 @@ export const back = (s: number = 1.70158): EasingFunction =>
 export const elastic = (bounciness: number = 1): EasingFunction => {
   const p = bounciness * Math.PI;
   return (t) =>
-    t === 0 || t === 1
-      ? t
-      : 1 - Math.pow(Math.cos((t * Math.PI) / 2), 3) * Math.cos(t * p);
+    t === 0 || t === 1 ? t : 1 - Math.pow(Math.cos((t * Math.PI) / 2), 3) * Math.cos(t * p);
 };
 
 /** Bounce easing — simulates a bouncing ball. */
@@ -67,12 +66,7 @@ export const bounce: EasingFunction = (t) => {
  * Creates a cubic-bezier easing function, equivalent to CSS `cubic-bezier()`.
  * Uses Newton-Raphson iteration for solving the bezier curve.
  */
-export const bezier = (
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-): EasingFunction => {
+export const bezier = (x1: number, y1: number, x2: number, y2: number): EasingFunction => {
   // Pre-computed polynomial coefficients for the bezier curve
   const cx = 3 * x1;
   const bx = 3 * (x2 - x1) - cx;
@@ -152,6 +146,4 @@ export const asOut =
 export const asInOut =
   (easing: EasingFunction): EasingFunction =>
   (t) =>
-    t < 0.5
-      ? easing(t * 2) / 2
-      : 1 - easing((1 - t) * 2) / 2;
+    t < 0.5 ? easing(t * 2) / 2 : 1 - easing((1 - t) * 2) / 2;
